@@ -1,84 +1,194 @@
-<h1>Olympic Data</h1>
-<!--<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>-->
-<!-- <div>
-    <svg width="200" height="200">
-        <ellipse cx="20" cy="100" rx="100" ry="20" />
-        <rect x="60" y="140" width="50" height="30" />
-        <line x1="80" y1="10" x2="140" y2="50" />
-    </svg>
-</div> -->
-
-
-
 <script>
+
+  //import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
+
+    
     const { data } = $props();
-    console.log(data)
+    //console.log(data)
 
-    let right_shear = 40
-    let bottom_shear = 20
 
-    let x_space = 60
-    let y_space = 20
+    //////////////////////////////////////
+    // first scatterplot
+    //////////////////////////////////////
 
-    let height = 700 + y_space + bottom_shear
-    let width = 700 + x_space + right_shear
+    let scatter_right_shear = 40
+    let scatter_bottom_shear = 40
 
-    let margin = 20
-    let half = margin / 2
+    let scatter_height = 360 + 60
+    let scatter_width = 360 + 100
 
-    let x_ticks = [5,10,15,20,25,30,35]
-    let y_ticks = [30,60,90,120,150]
+
+    let scatter_x_max = 230
+    let scatter_x_num = scatter_x_max / 20
+    let scatter_x_ticks = [scatter_x_num]
+    for (let i = 0; i < scatter_x_num; i++){
+        scatter_x_ticks[i] = 20 * i
+    }
+
+    let scatter_y_ticks = scatter_x_ticks
 
 
     /**
 	 * @param {any} a
 	 */
-    function scale_x (a) {return a}//{ return a * 10 + margin + right_shear}
+    function scatter_scale_x (a) { return a * 1.5 + scatter_right_shear}
 
     /**
 	 * @param {any} a
 	 */
-    function scale_y (a) {return a}//{ return height - (a * 4)  + margin - bottom_shear}
+    function scatter_scale_y (a) { return scatter_height - (a * 1.5) - scatter_bottom_shear}
 
-    let cnt = 0
+    ////////////////////////////////////////////////
+    // end of first scatterplot
+    ////////////////////////////////////////////////
+
+
+
+    ////////////////////////////////////////////////
+    // first line chart
+    ////////////////////////////////////////////////
+
+    let line_right_shear = 65
+    let line_bottom_shear = 70
+
+    let line_height = 320 + 100
+    let line_width = 360 + 100
+
+    /**
+	 * @param {any} a
+	 */
+    function line_calc_group (a) {
+        let temp = Math.floor((a-1896)/20)
+        if (temp <= 0){
+            temp = 1
+        }
+        else if (temp >= 7){
+            temp = 6
+        }
+        return temp
+    }
+    
+    /**
+     * @param {any} a
+     */
+        function line_calc_group_x (a) {
+            return a * 50 + line_right_shear
+        }
+
+    /**
+	 * @param {any} a
+	 */
+    function line_scale_y (a) { 
+        return line_height - (a /70) - line_bottom_shear
+    }
+
+    let medals = [0,0,0,0,0,0]
+    let groups = [1,2,3,4,5,6]
+    data.olymCSV.forEach((/** @type {{ Year: any; }} */ element) => {
+        let group = line_calc_group(element.Year)
+        medals[group-1] = medals[group-1] + 1
+    });
+    console.log("Medals: " + medals)
+
+    let line_x_ticks1 = ["1896", "1918", "1938", "1958", "1978", "1998"]
+    let line_x_ticks2 = ["1916", "1936", "1956", "1976", "1996", "2016"]
+    let line_y_ticks = []
+    for (let i = 1; i < 11; i++){
+        line_y_ticks[i-1] = 2000 * i
+    }
+
+    ////////////////////////////////////////////////
+    // end of line chart
+    ////////////////////////////////////////////////
+
 </script>
 
-<svg width="{width}" height="{height}">
-    <!-- This leads to an empty output -->
+<div style="margin-bottom: 10px;">
+    <text style="font-size: 30px;font-style: bold;">Olympic Data</text>
+    <text style="margin-left: 20px;">Source: <a href="https://www.kaggle.com/datasets/bhanupratapbiswas/olympic-data">Kaggle</a></text>
+</div>
+
+
+
+
+<!-- scatter plot -->
+<svg width="{scatter_width}" height="{scatter_height}">
     {#each data.olymCSV as datapoint}
-        <circle cx="{scale_x(datapoint.Weight)}" cy="{scale_y(datapoint.Height)}" r="3" />
-        {cnt++}
+        <circle cx="{scatter_scale_x(datapoint.Weight)}" cy="{scatter_scale_y(datapoint.Height)}" r="3" />
     {/each}
-    <!-- This works fine -->
-    <!-- {#each data.phoneCSV as datapoint}
-        <circle cx="{scale_x(datapoint.Age)}" cy="{scale_y(datapoint.total_use)}" r="3" />
-        {cnt++}
-    {/each} -->
+    
+    <line class="axis" id="x" x1="{scatter_scale_x(0)-5}" y1="{scatter_scale_y(0)}" x2="{scatter_scale_x(scatter_x_max+5)}" y2="{scatter_scale_y(0)}" />
+    <line class="axis" id="y" x1="{scatter_scale_x(0)}" y1="{scatter_scale_y(0)-5}" x2="{scatter_scale_x(0)}" y2="{scatter_scale_y(scatter_x_max+5)}" />
 
-    <!-- Print how many tuples are found -->
-    <text x=10 y=20>{cnt}</text>
+    <text x="{scatter_scale_x(scatter_x_max+10)}" y="{scatter_scale_y(0)+5}">Weight</text>
+    <text x="{scatter_scale_x(scatter_x_max+10)}" y="{scatter_scale_y(0)+25}">(kg)</text>
+    <text x="{scatter_scale_x(0)-35}" y="{scatter_scale_y(scatter_x_max+10)}">Height (cm)</text>
 
-
-    <!-- axes and ticks -->
-    <!-- <line class="axis" id="x" x1="{half + right_shear}" y1="{height-half - bottom_shear}" x2="{width-half-x_space}" y2="{height-half - bottom_shear}" />
-    <line class="axis" id="y" x1="{half + right_shear}" y1="{height-half - bottom_shear}" x2="{half + right_shear}" y2="{half+y_space}" />
- -->
-    <!-- <text x="{width-half-x_space + 3}" y="{height-half + 3 - bottom_shear}">Weight</text>
-    < text x="{half - 3}" y="{half+y_space - 3}">Height</text>-->
-
-    <!-- {#each x_ticks as tick}
-        <line class="tick" x1="{scale_x(tick)}" y1="{height-half - bottom_shear-5}" x2="{scale_x(tick)}" y2="{height-half - bottom_shear+5}" />
-        <text class="ticks" x="{scale_x(tick)-10}" y="{height-half - bottom_shear+17}">{tick}</text>
+    {#each scatter_x_ticks as tick}
+        <line class="tick" x1="{scatter_scale_x(tick)}" y1="{scatter_scale_y(0)+5}" x2="{scatter_scale_x(tick)}" y2="{scatter_scale_y(0)-5}" />
+        <text class="ticks" id="x_ticks" x="{scatter_scale_x(tick)}" y="{scatter_scale_y(0)+5}">{tick}</text>
     {/each}
 
-    {#each y_ticks as tick}
-        <line class="tick" x1="{half + right_shear-5}" y1="{scale_y(tick)}" x2="{half + right_shear+5}" y2="{scale_y(tick)}" />
-        <text class="ticks" x="{half + right_shear-35}" y="{scale_y(tick)+7}">{tick}</text>
-    {/each} -->
+    {#each scatter_y_ticks as tick}
+        <line class="tick" x1="{ scatter_scale_x(0)-5}" y1="{scatter_scale_y(tick)}" x2="{ scatter_scale_x(0)+5}" y2="{scatter_scale_y(tick)}" />
+        <text class="ticks" x="{scatter_scale_x(0)-35}" y="{scatter_scale_y(tick)+7}">{tick}</text>
+    {/each}
 </svg>
 
-    <!-- class .   id # -->
+
+<!-- line plot -->
+<svg width="{line_width}" height="{line_height}">
+    {#each groups as i}
+        <line class="bar" x1="{line_calc_group_x(i)}" y1="{line_scale_y(0)}" x2="{line_calc_group_x(i)}" y2="{line_scale_y(medals[i-1])}" />
+    {/each}
+    
+    <line class="axis" id="x" x1="{line_calc_group_x(0)-5}" y1="{line_scale_y(0)}" x2="{line_calc_group_x(6)+20}" y2="{line_scale_y(0)}" />
+    <line class="axis" id="y" x1="{line_calc_group_x(0)}" y1="{line_scale_y(0)+5}" x2="{line_calc_group_x(0)}" y2="{line_scale_y(22500)}" />
+
+    <text x="{line_calc_group_x(6)+20}" y="{line_scale_y(0)+5}">Year</text>
+    <text x="{line_calc_group_x(0)-37}" y="{line_scale_y(22500)-10}">Medals</text>
+    
+    {#each groups as tick}
+        <line class="tick" x1="{line_calc_group_x(tick)}" y1="{line_scale_y(0)+5}" x2="{line_calc_group_x(tick)}" y2="{line_scale_y(0)-5}" />
+        <text class="ticks" id="x_ticks" x="{line_calc_group_x(tick)+9}" y="{line_scale_y(0)+5}">{line_x_ticks1[tick-1]+" -"}</text>
+        <text class="ticks" id="x_ticks" x="{line_calc_group_x(tick)-9}" y="{line_scale_y(0)+5}">{line_x_ticks2[tick-1]}</text>
+    {/each}
+
+    
+    {#each line_y_ticks as tick}
+        <line class="tick" x1="{ line_calc_group_x(0)-5}" y1="{line_scale_y(tick)}" x2="{ line_calc_group_x(0)+5}" y2="{line_scale_y(tick)}" />
+        <text class="ticks" x="{line_calc_group_x(0)-60}" y="{line_scale_y(tick)+7}">{tick}</text>
+    {/each}
+</svg>
+
+<!-- Pie chart -->
+<svg width="{line_width}" height="{line_height}">
+    <div class="piechart"></div>
+</svg>
+
+
+<!-- class .   id # -->
 <style>
+    .piechart {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background-image: conic-gradient(
+            pink 70deg,
+            lightblue 0 235deg,
+            orange 0
+        );
+    }
+    .bar {
+        stroke: green;
+        stroke-width: 13;
+    }
+    :global(body) {
+        background-color: lightgrey;
+    }
+    #x_ticks{
+        writing-mode: vertical-lr;
+    }
     .tick{
         stroke: black;
         stroke-width: 2;
@@ -94,7 +204,7 @@
         border-color: gray;
     }
     circle {
-        fill: green;
+        fill: rgb(32, 178, 95);
         fill-opacity: 1;
     }
 </style>
