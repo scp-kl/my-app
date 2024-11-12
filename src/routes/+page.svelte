@@ -12,6 +12,7 @@
 
 <script>
     const { data } = $props();
+    console.log(data)
 
     let right_shear = 40
     let bottom_shear = 20

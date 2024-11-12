@@ -14,6 +14,6 @@ export async function load({ fetch, params }) {
 
   return { 
     phoneCSV: parsedCSV.data,
-    olymCSV: oparsedCSV
+    olymCSV: oparsedCSV.data
   }
 }
