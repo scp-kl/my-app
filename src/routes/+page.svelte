@@ -101,6 +101,30 @@
     // end of line chart
     ////////////////////////////////////////////////
 
+
+    ////////////////////////////////////////////////
+    // begin pie chart
+    ////////////////////////////////////////////////
+    let summer = 0
+    let winter = 0
+    
+    data.olymCSV.forEach((/** @type {{ Season: any; }} */ element) => {
+        let seas = element.Season
+        if (seas == "Summer"){
+            summer++
+        }
+        else {
+            winter++
+        }
+    });
+
+    let total = summer + winter
+    let deg_border = (winter / total) * 360
+
+    /////////////////////////////////////////////////
+    // end pie
+    /////////////////////////////////////////////////
+
 </script>
 
 <div style="margin-bottom: 10px;">
@@ -109,8 +133,8 @@
 </div>
 
 
-
-
+<div style="float: left;">
+<div class="box" style="margin-right: 10px;">
 <!-- scatter plot -->
 <svg width="{scatter_width}" height="{scatter_height}">
     {#each data.olymCSV as datapoint}
@@ -134,9 +158,10 @@
         <text class="ticks" x="{scatter_scale_x(0)-35}" y="{scatter_scale_y(tick)+7}">{tick}</text>
     {/each}
 </svg>
-
+</div>
 
 <!-- line plot -->
+<div class="box" style="margin-right: 10px;">
 <svg width="{line_width}" height="{line_height}">
     {#each groups as i}
         <line class="bar" x1="{line_calc_group_x(i)}" y1="{line_scale_y(0)}" x2="{line_calc_group_x(i)}" y2="{line_scale_y(medals[i-1])}" />
@@ -160,24 +185,34 @@
         <text class="ticks" x="{line_calc_group_x(0)-60}" y="{line_scale_y(tick)+7}">{tick}</text>
     {/each}
 </svg>
+</div>
 
 <!-- Pie chart -->
-<svg width="{line_width}" height="{line_height}">
-    <div class="piechart"></div>
-</svg>
-
+<div class="pie_out box" style="width: {line_width}px; height: {line_height}px; position: relative;">
+    <text x=100 y=20 style="font-size: 25px; font-style: bold; position: absolute; left: 50px;">Participants per Season</text>
+    <text x=50 y=100 style="font-size: 20px; position: absolute; left: 35px; top: 120px;">Summer</text>
+    <text x=350 y=100 style="font-size: 20px; position: absolute; left: 300px; top: 100px;">Winter</text>
+    <div class="piechart"><!-- {total}, {winter}, {deg_border} --></div>
+</div>
+</div>
 
 <!-- class .   id # -->
 <style>
+    .box {
+        float: left;
+    }
     .piechart {
         width: 200px;
         height: 200px;
         border-radius: 50%;
         background-image: conic-gradient(
-            pink 70deg,
-            lightblue 0 235deg,
-            orange 0
+            rgb(112, 207, 238) 59.31deg,
+            rgb(225, 140, 74) 0 
         );
+        margin-top: 110px;
+        margin-bottom: 100px;
+        margin-left: 130px;
+        margin-right: 130px;
     }
     .bar {
         stroke: green;
@@ -198,7 +233,7 @@
         stroke: black;
         stroke-width: 2;
     }
-    svg {
+    svg, .pie_out {
         border: 1px;
         border-style: solid;
         border-color: gray;
