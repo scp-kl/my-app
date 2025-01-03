@@ -5,7 +5,7 @@
 	import RangeSlider from 'svelte-range-slider-pips'
     import { scaleLinear } from 'd3-scale';
 	
-
+    let bottom_dict = new Map();
     let year_slider_min = $state(0);
     let year_slider_max = $state(1);
     let year_min = $derived(1896 + ((2016-1896) * year_slider_min));
@@ -75,7 +75,7 @@
     // bottom
     //-------------------------------------------------------------------------
     
-    let bottom_dict = new Map();
+    
 
     function calc_bottom(in_data){
         let num_x_ticks = 12.0
@@ -172,16 +172,18 @@
             if (i < missing_x){
                 divisor++
             }
-            num_1[i] /= divisor;
-            num_2[i] /= divisor;
-            num_3[i] /= divisor;
-            num_4[i] /= divisor;
-            num_5[i] /= divisor;
-            num_6[i] /= divisor;
-            num_7[i] /= divisor;
-            num_8[i] /= divisor;
             num_m[i] /= divisor;
             num_w[i] /= divisor;
+
+            let sum = num_1[i] + num_2[i] + num_3[i] + num_4[i] + num_5[i] + num_6[i] + num_7[i] + num_8[i];
+            num_1[i] /= sum;
+            num_2[i] /= sum;
+            num_3[i] /= sum;
+            num_4[i] /= sum;
+            num_5[i] /= sum;
+            num_6[i] /= sum;
+            num_7[i] /= sum;
+            num_8[i] /= sum;
         }
 
         bottom_dict.set("1", num_1);
@@ -199,6 +201,7 @@
 
         //console.log(bottom_dict)
     }
+
     
 </script>
 
