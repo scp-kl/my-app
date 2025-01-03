@@ -3,7 +3,7 @@
 
     import DoubleRangeSlider from './DoubleRangeSlider.svelte';
 	import RangeSlider from 'svelte-range-slider-pips'
-    import { scaleLinear } from 'd3-scale';
+    //import { scaleLinear } from 'd3-scale';
 	
     let bottom_dict = new Map();
     let year_slider_min = $state(0);
@@ -63,7 +63,7 @@
         return {filtered: output, distinct: distinct_set, games: games_set};
     }
 
-    const scale_bl_x = scaleLinear().domain([0,2000]).range(200,10000)
+    //const scale_bl_x = scaleLinear().domain([0,2000]).range(200,10000)
 
     function update_after_selection(unfiltered_data, ui){
         let res = apply_filter(unfiltered_data, ui);
