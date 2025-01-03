@@ -8,7 +8,7 @@ export async function load({ fetch, params }) {
   let parsedCSV = Papa.parse(textCSV, {header: true})
 
 
-  const oCSV = await fetch(base + '/dataset_olympics.csv', {headers: {'Content-Type': 'text/csv'}})
+  const oCSV = await fetch(base + '/edited_olym.csv', {headers: {'Content-Type': 'text/csv'}})
   let otextCSV = await oCSV.text()
   let oparsedCSV = Papa.parse(otextCSV, {header: true})
 
