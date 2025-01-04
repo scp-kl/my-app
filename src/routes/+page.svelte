@@ -37,8 +37,9 @@
     }
 
     function check_type (point){
-        //todo: implement
-        return true;
+        return ((checked_group1 && point.Group == "1") || (checked_group2 && point.Group == "2") || (checked_group3 && point.Group == "3") || 
+                (checked_group4 && point.Group == "4") || (checked_group5 && point.Group == "5") || (checked_group6 && point.Group == "6") || 
+                (checked_group7 && point.Group == "7") || (checked_group8 && point.Group == "8"));
     }
 
     function check_season (point){
@@ -51,7 +52,7 @@
         let games_set = new Set();
         unfiltered_data.forEach(point => {
             if (year_min <= point.Year && year_max >= point.Year &&
-                check_gender(point) && check_type(point) && check_season(point)
+                check_gender(point) && check_season(point)
             ){
                 output.push(point);
                 distinct_set.add(point.ID)
@@ -68,14 +69,163 @@
     function update_after_selection(unfiltered_data, ui){
         let res = apply_filter(unfiltered_data, ui);
         calc_bottom(res);
+        calc_top(res)
         return res;
     }
+
+
+
+    //-------------------------------------------------------------------------
+    // top
+    //-------------------------------------------------------------------------
+
+    let sports_types = new Map([["1", "Team"], ["2", "Racquet"], ["3", "Combat"], ["4", "Water"], ["5", "Winter"], ["6", "Track/Field"], 
+            ["7", "Gymnastics/Acrobatic"], ["8", "Remaining"]]);
+    function calc_top(in_data){
+        const l_med = new Map(); const l_num = new Map();
+        const m_age = new Map(); const m_num = new Map(); const m_wei = new Map(); const m_hei = new Map();
+        const r_w_med = new Map(); const r_w_num = new Map(); const r_m_med = new Map(); const r_m_num = new Map(); const r_num = new Map(); const r_age = new Map();
+
+        in_data.filtered.forEach((element) => {
+            if (check_type(element)){
+                l_num.set(element.NOC, (l_num.get(element.NOC) ?? 0) +1);
+            }
+
+            if (element.Age > 0 && element.Weight > 0 && element.Height > 0){
+                m_age.set(element.Group, (m_age.get(element.Group) ?? 0) + Number(element.Age));
+                m_hei.set(element.Group, (m_hei.get(element.Group) ?? 0) + Number(element.Height));
+                m_wei.set(element.Group, (m_wei.get(element.Group) ?? 0) + Number(element.Weight));
+                m_num.set(element.Group, (m_num.get(element.Group) ?? 0) + 1);
+            }
+
+            if (element.Medal != "" && element.Medal != null){
+                if (check_type(element)){
+                    let to_add = 1;
+                    if (element.Medal == "Silver") {to_add = 2;}
+                    else if (element.Medal == "Gold") {to_add = 3;}
+                    l_med.set(element.NOC, (l_med.get(element.NOC) ?? 0) + to_add);
+                }
+
+
+                r_num.set(element.Group, (r_num.get(element.Group) ?? 0) +1);
+                r_age.set(element.Group, (r_age.get(element.Group) ?? 0) + Number(element.Age));
+                
+                if (element.Sex == "F"){
+                    r_w_med.set(element.Group, (r_w_med.get(element.Group) ?? 0) +1);
+                }
+                else {
+                    r_m_med.set(element.Group, (r_m_med.get(element.Group) ?? 0) +1);
+                }
+            }
+
+            if (element.Sex == "F"){
+                r_w_num.set(element.Group, (r_w_num.get(element.Group) ?? 0) +1);
+            }
+            else {
+                r_m_num.set(element.Group, (r_m_num.get(element.Group) ?? 0) +1);
+            }
+        });
+
+        //--------------
+        // top left
+        //--------------
+        let top_l = new Map();
+
+        let keyset = l_num.keys();
+        let sort_abs = []
+        let sort_rel = []
+        keyset.forEach((element) => {
+            let num = l_num.get(element);
+            let med = l_med.get(element) ?? 0;
+            let rel = med / num;
+
+            sort_abs.push({num: med, nat: element});
+            sort_rel.push({num: rel, nat: element});
+        })
+        sort_abs.sort((a,b) => b.num - a.num)
+        sort_rel.sort((a,b) => b.num - a.num)
+
+        top_l.set("best_rel", [sort_rel[0].nat, sort_rel[1].nat, sort_rel[2].nat])
+        top_l.set("best_abs", [sort_abs[0].nat, sort_abs[1].nat, sort_abs[2].nat])
+        let len = sort_abs.length - 1
+        top_l.set("worst_rel", [sort_rel[len - 0].nat, sort_rel[len - 1].nat, sort_rel[len - 2].nat])
+        top_l.set("worst_abs", [sort_abs[len - 0].nat, sort_abs[len - 1].nat, sort_abs[len - 2].nat])
+
+
+
+        //--------------
+        // top middle
+        //--------------
+        let top_m = [];
+        
+        let groups = sports_types.keys();
+        groups.forEach(element => {
+            let num = m_num.get(element) ?? 0;
+            var tmp = {sport: sports_types.get(element), "age": 0, "hei": 0, "wei": 0}
+            if (num > 0){
+                let age = m_age.get(element);
+                let hei = m_hei.get(element);
+                let wei = m_wei.get(element);
+
+                tmp = {sport: sports_types.get(element), "age": age/num, "hei": hei/num, "wei": wei/num}
+            }
+            top_m.push(tmp);
+        });
+
+
+
+        //--------------
+        // top right
+        //--------------
+        let top_r = new Map();
+
+        let woman = []
+        let men = []
+        let age = []
+        groups = sports_types.keys();
+        groups.forEach(element => {
+            let gr = sports_types.get(element)
+            let w_score = 0;
+            let w_num = r_w_num.get(element) ?? 0;
+            if (w_num > 0) {
+                let w_med = r_w_med.get(element) ?? 0;
+                w_score = w_med / w_num;
+            }
+            woman.push({"group": gr, "score": w_score})
+
+            let m_score = 0;
+            let m_num = r_m_num.get(element) ?? 0;
+            if (m_num > 0) {
+                let m_med = r_m_med.get(element) ?? 0;
+                m_score = m_med / m_num;
+            }
+            men.push({"group": gr, "score": m_score})
+
+            let a_score = 0;
+            let a_num = r_num.get(element) ?? 0;
+            if (a_num > 0) {
+                let a_med = r_age.get(element) ?? 0;
+                a_score = a_med / a_num;
+            }
+            age.push({"group": gr, "score": a_score})
+        })
+        woman.sort((a,b) => b.score - a.score)
+        men.sort((a,b) => b.score - a.score)
+        age.sort((a,b) => b.score - a.score)
+
+        top_r.set("women", [woman[0].group, woman[1].group, woman[2].group])
+        top_r.set("men", [men[0].group, men[1].group, men[2].group])
+        top_r.set("old", [age[0].group, age[1].group, age[2].group])
+        len = age.length - 1
+        top_r.set("young", [age[len].group, age[len - 1].group, age[len - 2].group])
+
+        console.log(top_r)
+    }
+
 
     //-------------------------------------------------------------------------
     // bottom
     //-------------------------------------------------------------------------
-    
-    
 
     function calc_bottom(in_data){
         let num_x_ticks = 12.0
