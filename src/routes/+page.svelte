@@ -5,7 +5,9 @@
 	import RangeSlider from 'svelte-range-slider-pips'
     //import { scaleLinear } from 'd3-scale';
 	
-    let bottom_dict = new Map();
+    let sports_types = new Map([["1", "Team"], ["2", "Racquet"], ["3", "Combat"], ["4", "Water"], ["5", "Winter"], ["6", "Track/Field"], 
+            ["7", "Gymnastics/Acrobatic"], ["8", "Remaining"]]);
+
     let year_slider_min = $state(0);
     let year_slider_max = $state(1);
     let year_min = $derived(1896 + ((2016-1896) * year_slider_min));
@@ -61,15 +63,19 @@
         });
         //console.log(unfiltered_data, output)
         //console.log(games_set)
-        return {filtered: output, distinct: distinct_set, games: games_set};
+        let out = new Map()
+        out.set("filtered", output)
+        out.set("distinct", distinct_set)
+        out.set("games", games_set)
+        return out
     }
 
     //const scale_bl_x = scaleLinear().domain([0,2000]).range(200,10000)
 
     function update_after_selection(unfiltered_data, ui){
         let res = apply_filter(unfiltered_data, ui);
-        calc_bottom(res);
-        calc_top(res)
+        res = calc_bottom(res);
+        res = calc_top(res)
         return res;
     }
 
@@ -79,14 +85,18 @@
     // top
     //-------------------------------------------------------------------------
 
-    let sports_types = new Map([["1", "Team"], ["2", "Racquet"], ["3", "Combat"], ["4", "Water"], ["5", "Winter"], ["6", "Track/Field"], 
-            ["7", "Gymnastics/Acrobatic"], ["8", "Remaining"]]);
+    
     function calc_top(in_data){
+        let top_l = new Map();
+        let top_m = [];
+        let top_r = new Map();
+
+
         const l_med = new Map(); const l_num = new Map();
         const m_age = new Map(); const m_num = new Map(); const m_wei = new Map(); const m_hei = new Map();
         const r_w_med = new Map(); const r_w_num = new Map(); const r_m_med = new Map(); const r_m_num = new Map(); const r_num = new Map(); const r_age = new Map();
 
-        in_data.filtered.forEach((element) => {
+        in_data.get("filtered").forEach((element) => {
             if (check_type(element)){
                 l_num.set(element.NOC, (l_num.get(element.NOC) ?? 0) +1);
             }
@@ -129,7 +139,6 @@
         //--------------
         // top left
         //--------------
-        let top_l = new Map();
 
         let keyset = l_num.keys();
         let sort_abs = []
@@ -156,7 +165,6 @@
         //--------------
         // top middle
         //--------------
-        let top_m = [];
         
         let groups = sports_types.keys();
         groups.forEach(element => {
@@ -177,7 +185,6 @@
         //--------------
         // top right
         //--------------
-        let top_r = new Map();
 
         let woman = []
         let men = []
@@ -220,6 +227,11 @@
         top_r.set("young", [age[len].group, age[len - 1].group, age[len - 2].group])
 
         console.log(top_r)
+
+        in_data.set("top_l", top_l)
+        in_data.set("top_m", top_m)
+        in_data.set("top_r", top_r)
+        return in_data
     }
 
 
@@ -228,14 +240,17 @@
     //-------------------------------------------------------------------------
 
     function calc_bottom(in_data){
+        let bottom_dict = new Map();
+
+
         let num_x_ticks = 12.0
-        let num_x_vals = in_data.games.size
+        let num_x_vals = in_data.get("games").size
         let vals_per_tick = num_x_vals / num_x_ticks
         vals_per_tick = Math.floor(vals_per_tick)
         let direct_x = vals_per_tick * num_x_ticks
         let missing_x = num_x_vals - direct_x
 
-        let values = Array.from(in_data.games)
+        let values = Array.from(in_data.get("games"))
         values.sort()
 
         let num_m = []
@@ -277,7 +292,7 @@
             num_w.push(0)
         }
 
-        in_data.filtered.forEach((element) => {
+        in_data.get("filtered").forEach((element) => {
             for (var i = 0; i < num_x_ticks; i++){
                 if (element.Year <= x_comp[i]){
                     if (element.Sex == "M"){
@@ -350,6 +365,8 @@
 
 
         //console.log(bottom_dict)
+        in_data.set("bottom", bottom_dict)
+        return in_data
     }
 
     
@@ -413,15 +430,52 @@
         </div>
         <div style="">
             Number of Elements: <br>
-            {filetered_data.filtered.length} / 70000<br>
+            {filetered_data.get("filtered").length} / 70000<br>
             Distinct people: <br>
-            {filetered_data.distinct.size} / 35658<br>
+            {filetered_data.get("distinct").size} / 35658<br>
             Distinct Games:<br>
-            {filetered_data.games.size} / 51
+            {filetered_data.get("games").size} / 51
         </div>
     </div><!-- end left -->
     <div class="item2"><!-- topL -->
-        <img src="images/top_left.png" style="height: 40vh;" alt="background image" />
+        <div style="height: 49%; width: 100%; padding: 3px; font-size: 17px; font-weight: bold; ">
+            <div>
+                Best Nations:
+            </div>
+            <div class="top_pic" style="">
+                Absolute:<br>
+                <img class="podium" src="images/best_podium.png" style="width: 95%;" alt="background image" />
+                <div style="position: absolute; left: 43%; bottom: 55%;"> {filetered_data.get("top_l").get("best_abs")[0] ?? 0}</div>
+                <div style="position: absolute; left: 12%; bottom: 41%;"> {filetered_data.get("top_l").get("best_abs")[1] ?? 0}</div>
+                <div style="position: absolute; left: 73%; bottom: 35%;"> {filetered_data.get("top_l").get("best_abs")[2] ?? 0}</div>
+            </div>
+            <div class="top_pic" style="">
+                Relative:<br>
+                <img class="podium" src="images/best_podium.png" style="width: 95%;" alt="background image" />
+                <div style="position: absolute; left: 43%; bottom: 55%;"> {filetered_data.get("top_l").get("best_rel")[0] ?? 0}</div>
+                <div style="position: absolute; left: 12%; bottom: 41%;"> {filetered_data.get("top_l").get("best_rel")[1] ?? 0}</div>
+                <div style="position: absolute; left: 73%; bottom: 35%;"> {filetered_data.get("top_l").get("best_rel")[2] ?? 0}</div>
+            </div>
+        </div>
+        <div style="height: 49%; width: 100%; padding: 3px; font-size: 17px; font-weight: bold;">
+            <div>
+                Worst Nations:
+            </div>
+            <div class="top_pic" style="">
+                Absolute:<br>
+                <img class="podium2" src="images/worst_podium.png" style="width: 95%;" alt="background image" />
+                <div style="position: absolute; left: 43%; bottom: 24%;"> {filetered_data.get("top_l").get("worst_abs")[0] ?? 0}</div>
+                <div style="position: absolute; left: 12%; bottom: 41%;"> {filetered_data.get("top_l").get("worst_abs")[1] ?? 0}</div>
+                <div style="position: absolute; left: 73%; bottom: 35%;"> {filetered_data.get("top_l").get("worst_abs")[2] ?? 0}</div>
+            </div>
+            <div class="top_pic" style="">
+                Relative:<br>
+                <img class="podium2" src="images/worst_podium.png" style="width: 95%;" alt="background image" />
+                <div style="position: absolute; left: 43%; bottom: 24%;"> {filetered_data.get("top_l").get("worst_rel")[0] ?? 0}</div>
+                <div style="position: absolute; left: 12%; bottom: 41%;"> {filetered_data.get("top_l").get("worst_rel")[1] ?? 0}</div>
+                <div style="position: absolute; left: 73%; bottom: 35%;"> {filetered_data.get("top_l").get("worst_rel")[2] ?? 0}</div>
+            </div>
+        </div>
     </div><!-- topL -->
     <div class="item3"><!-- topM -->
         <img src="images/top_middle.png" style="height: 40vh;" alt="background image" />
@@ -460,7 +514,6 @@
         border-right: none;
         /* flex-grow: 1; */
     }
-    .item2 { grid-area: topL; }
     .item3 { grid-area: topM; }
     .item4 { grid-area: topR; }
     .item5 { grid-area: botL; }
@@ -480,6 +533,42 @@
         padding: 3px;
         grid-template-columns: repeat(7, 1fr);
     }
+
+
+    .item2 { 
+        grid-area: topL;
+        /* display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        overflow-y: auto; */
+    }
+    .top_pic {
+        width:49%; 
+        height: 90%;
+        border: 1px;
+        border-style: solid;
+        border-color: gray;
+        font-size: 16px; 
+        font-weight: normal;
+        text-align: center;
+        flex-direction: row;
+        float: left;
+        position:relative;
+    }
+
+    .podium {
+        position: absolute;
+        bottom: 0.7em;
+        left: 0.45em;
+    }
+
+    .podium2 {
+        position: absolute;
+        top: 2em;
+        left: 0.45em;
+    }
+
+
     :global(body) {
         background-color: lightgrey;
     }
