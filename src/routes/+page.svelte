@@ -1,12 +1,14 @@
 <script lang="ts">    
     const { data } = $props();
 
+	import { color, group } from 'd3';
     import DoubleRangeSlider from './DoubleRangeSlider.svelte';
 	import RangeSlider from 'svelte-range-slider-pips'
+	import { get } from 'svelte/store';
     //import { scaleLinear } from 'd3-scale';
 	
     let sports_types = new Map([["1", "Team"], ["2", "Racquet"], ["3", "Combat"], ["4", "Water"], ["5", "Winter"], ["6", "Track/Field"], 
-            ["7", "Gymnastics/Acrobatic"], ["8", "Remaining"]]);
+            ["7", "Gymnast./Acrob."], ["8", "Remaining"]]);
 
     let year_slider_min = $state(0);
     let year_slider_max = $state(1);
@@ -226,7 +228,7 @@
         len = age.length - 1
         top_r.set("young", [age[len].group, age[len - 1].group, age[len - 2].group])
 
-        console.log(top_r)
+        //console.log(top_r)
 
         in_data.set("top_l", top_l)
         in_data.set("top_m", top_m)
@@ -239,15 +241,19 @@
     // bottom
     //-------------------------------------------------------------------------
 
+    let bot_num_x_ticks = 12.0
+    let bot_ticks = Array(bot_num_x_ticks).fill(0).map((_, i) => i)
+    //console.log(bot_ticks)
+
     function calc_bottom(in_data){
         let bottom_dict = new Map();
 
 
-        let num_x_ticks = 12.0
+        let bot_num_x_ticks = 12.0
         let num_x_vals = in_data.get("games").size
-        let vals_per_tick = num_x_vals / num_x_ticks
+        let vals_per_tick = num_x_vals / bot_num_x_ticks
         vals_per_tick = Math.floor(vals_per_tick)
-        let direct_x = vals_per_tick * num_x_ticks
+        let direct_x = vals_per_tick * bot_num_x_ticks
         let missing_x = num_x_vals - direct_x
 
         let values = Array.from(in_data.get("games"))
@@ -267,7 +273,7 @@
         let x_comp = []
         let x_ticks = []
         let last_max = -1
-        for (var i = 0; i < num_x_ticks; i++){
+        for (var i = 0; i < bot_num_x_ticks; i++){
             let min = values[last_max+1]
             let max_i = last_max + vals_per_tick
             if (i < missing_x){
@@ -293,7 +299,7 @@
         }
 
         in_data.get("filtered").forEach((element) => {
-            for (var i = 0; i < num_x_ticks; i++){
+            for (var i = 0; i < bot_num_x_ticks; i++){
                 if (element.Year <= x_comp[i]){
                     if (element.Sex == "M"){
                         num_m[i] = num_m[i] + 1;
@@ -332,7 +338,7 @@
             }
         });
 
-        for (i = 0; i < num_x_ticks; i++){
+        for (i = 0; i < bot_num_x_ticks; i++){
             var divisor = vals_per_tick
             if (i < missing_x){
                 divisor++
@@ -350,6 +356,17 @@
             num_7[i] /= sum;
             num_8[i] /= sum;
         }
+
+        for (i = 0; i < bot_num_x_ticks; i++){
+            num_2[i] += num_1[i];
+            num_3[i] += num_2[i];
+            num_4[i] += num_3[i];
+            num_5[i] += num_4[i];
+            num_6[i] += num_5[i];
+            num_7[i] += num_6[i];
+            num_8[i] += num_7[i];
+        }
+
 
         bottom_dict.set("1", num_1);
         bottom_dict.set("2", num_2);
@@ -369,6 +386,23 @@
         return in_data
     }
 
+    let bottom_height = 70;
+    let bottom_width = 72;
+    let bottom_top = 27;
+    let bottom_left = 8;
+
+    /**
+	 * @param {any} a
+	 */
+     function bottom_scale_x (a) { return a * (bottom_width / (bot_num_x_ticks + 1)) + bottom_left}
+
+    /**
+     * @param {any} a
+     */
+    function bottom_scale_y (a) { return 100 - (a * bottom_height) - bottom_top}
+
+    let bot_color = ["red", "blue", "green", "orange", "grey", "yellow", "pink", "brown"]
+    console.log(filetered_data.get("bottom").get(1+""))
     
 </script>
 
@@ -488,11 +522,66 @@
     </div><!-- end botL -->
     <div class="item6"><!-- botR -->
         Attendancies per sports type (averaged per game)
+        <svg class="bottpic" style="">
+            <line class="axis" id="x" x1="{bottom_scale_x(-0.5)}%" y1="{bottom_scale_y(0)}%" x2="{bottom_scale_x(bot_num_x_ticks+0.5)}%" y2="{bottom_scale_y(0)}%" />
+            <line class="axis" id="y" x1="{bottom_scale_x(0)}%" y1="{bottom_scale_y(-0.04)}%" x2="{bottom_scale_x(0)}%" y2="{bottom_scale_y(1.025)}%" />
+
+            {#each bot_ticks as i}
+                <line class="tick" y1="{bottom_scale_y(-0.02)}%" y2="{bottom_scale_y(0.02)}%" x1="{bottom_scale_x(i+1)}%" x2="{bottom_scale_x(i+1)}%" />
+
+                {#each [1,2,3,4,5,6,7,8] as group}
+                    {#if group == 1}
+                        <line class="bar" style="stroke: {bot_color[group-1]};" y1="{bottom_scale_y(0)}%" y2="{bottom_scale_y(filetered_data.get("bottom").get(group+"")[i])}%" 
+                        x1="{bottom_scale_x(i+1)}%" x2="{bottom_scale_x(i+1)}%" />
+                    {:else}
+                        <line class="bar" style="stroke: {bot_color[group-1]};" y1="{bottom_scale_y(filetered_data.get("bottom").get((group-1)+"")[i])}%" 
+                        y2="{bottom_scale_y(filetered_data.get("bottom").get(group+"")[i])}%" x1="{bottom_scale_x(i+1)}%" x2="{bottom_scale_x(i+1)}%" />
+                    {/if}
+                {/each}
+
+                <text x="{bottom_scale_x(i+1.2)}%" y="{bottom_scale_y(-0.02)}%" style="writing-mode: vertical-rl;">
+                    {filetered_data.get("bottom").get("x")[i].substring(0,8) + "-"}</text>
+                <text x="{bottom_scale_x(i+0.8)}%" y="{bottom_scale_y(-0.02)}%" style="writing-mode: vertical-rl;">
+                    {filetered_data.get("bottom").get("x")[i].split("-")[1].substring(0,9)}</text>
+            {/each}
+
+            {#each [1,2,3,4,5,6,7,8] as group}<!-- labels right to plot -->
+                <line style="stroke: {bot_color[group-1]}; stroke-width: 3%" y1="{bottom_scale_y(1 - (group * 0.1))}%" y2="{bottom_scale_y(1 - (group * 0.1)) - 4}%"
+                x1="{bottom_scale_x(bot_num_x_ticks+1)}%" x2="{bottom_scale_x(bot_num_x_ticks+1)}%" />
+                <text x="{bottom_scale_x(bot_num_x_ticks+1.5)}%" y="{bottom_scale_y(1 - (group * 0.1))}%">{sports_types.get(group+"")}</text>
+            {/each}
+
+            {#each [0.2,0.4,0.6,0.8,1] as i}
+                <line class="tick" y1="{bottom_scale_y(i)}%" y2="{bottom_scale_y(i)}%" x1="{bottom_scale_x(-0.15)}%" x2="{bottom_scale_x(0.15)}%" />
+                <text x="{bottom_scale_x(-1.2)}%" y="{bottom_scale_y(i)+1.3}%">{i*100}%</text>
+            {/each}
+        </svg>
     </div><!-- end botR -->
 </div>
 
 <!-- class .   id # -->
 <style>
+    .bottpic {
+        width:99%; 
+        height: 90%; 
+        margin: 5px;
+        padding: 3px;
+        border: 1px gray solid;
+        font-size: 16px; 
+        font-weight: normal;
+    }
+    .bar {
+        stroke-width: 4%;
+    }
+    .tick{
+        stroke: black;
+        stroke-width: 2;
+
+    }
+    .axis{
+        stroke: black;
+        stroke-width: 2;
+    }
     * {
         box-sizing: border-box;
     }
@@ -517,7 +606,12 @@
     .item3 { grid-area: topM; }
     .item4 { grid-area: topR; }
     .item5 { grid-area: botL; }
-    .item6 { grid-area: botR; }
+    .item6 { 
+        grid-area: botR;
+        font-size: 17px; 
+        font-weight: bold;
+        padding: 3px;
+    }
     .grid-container > div {/* div elements of the grid */
     background-color: lightgrey;
     }
