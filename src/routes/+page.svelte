@@ -1,7 +1,7 @@
 <script lang="ts">    
     const { data } = $props();
 
-	import { color, group } from 'd3';
+	//import { color, group } from 'd3';
     import DoubleRangeSlider from './DoubleRangeSlider.svelte';
 	import RangeSlider from 'svelte-range-slider-pips'
 	import { get } from 'svelte/store';
@@ -338,6 +338,8 @@
             }
         });
 
+        let bot_l_max = 0;
+
         for (i = 0; i < bot_num_x_ticks; i++){
             var divisor = vals_per_tick
             if (i < missing_x){
@@ -345,6 +347,13 @@
             }
             num_m[i] /= divisor;
             num_w[i] /= divisor;
+
+            if (bot_l_max < num_w[i]){
+                bot_l_max = num_w[i]
+            }
+            if (bot_l_max < num_m[i]){
+                bot_l_max = num_m[i]
+            }
 
             let sum = num_1[i] + num_2[i] + num_3[i] + num_4[i] + num_5[i] + num_6[i] + num_7[i] + num_8[i];
             num_1[i] /= sum;
@@ -379,6 +388,7 @@
         bottom_dict.set("m", num_m);
         bottom_dict.set("w", num_w);
         bottom_dict.set("x", x_ticks);
+        bottom_dict.set("max", bot_l_max)
 
 
         //console.log(bottom_dict)
@@ -397,12 +407,17 @@
      function bottom_scale_x (a) { return a * (bottom_width / (bot_num_x_ticks + 1)) + bottom_left}
 
     /**
+	 * @param {any} a
+	 */
+     function l_bottom_scale_x (a) { return a * ((95 - bottom_left) / (bot_num_x_ticks + 1)) + bottom_left}
+
+    /**
      * @param {any} a
      */
     function bottom_scale_y (a) { return 100 - (a * bottom_height) - bottom_top}
 
     let bot_color = ["red", "blue", "green", "orange", "grey", "yellow", "pink", "brown"]
-    console.log(filetered_data.get("bottom").get(1+""))
+    //console.log(filetered_data.get("bottom").get(1+""))
     
 </script>
 
@@ -518,7 +533,32 @@
         <img src="images/top_right.png" style="height: 40vh;" alt="background image" />
     </div><!-- end topR -->
     <div class="item5"><!-- botL -->
-        <img src="images/bottom_left.png" style="height: 35vh;" alt="background image" />
+        Attendancies averaged per game: <text style="color: red">women</text> and <text style="color: blue">men</text>
+        <svg class="bottpic" style="">
+            <line class="axis" id="x" x1="{l_bottom_scale_x(-0.5)}%" y1="{bottom_scale_y(0)}%" x2="{l_bottom_scale_x(bot_num_x_ticks+0.5)}%" y2="{bottom_scale_y(0)}%" />
+            <line class="axis" id="y" x1="{l_bottom_scale_x(0)}%" y1="{bottom_scale_y(-0.04)}%" x2="{l_bottom_scale_x(0)}%" y2="{bottom_scale_y(1.025)}%" />
+
+            {#each bot_ticks as i}
+                <line class="tick" y1="{bottom_scale_y(-0.02)}%" y2="{bottom_scale_y(0.02)}%" x1="{l_bottom_scale_x(i+1)}%" x2="{l_bottom_scale_x(i+1)}%" />
+
+                <line class="bar" style="stroke: red;" y1="{bottom_scale_y(0)}%" y2="{bottom_scale_y(filetered_data.get("bottom").get("w")[i] / filetered_data.get("bottom").get("max"))}%" 
+                        x1="{l_bottom_scale_x(i+1.2)}%" x2="{l_bottom_scale_x(i+1.2)}%" />
+                <line class="bar" style="stroke: blue;" y1="{bottom_scale_y(0)}%" y2="{bottom_scale_y(filetered_data.get("bottom").get("m")[i] / filetered_data.get("bottom").get("max"))}%" 
+                        x1="{l_bottom_scale_x(i+0.8)}%" x2="{l_bottom_scale_x(i+0.8)}%" />
+
+
+
+                <text x="{l_bottom_scale_x(i+1.2)}%" y="{bottom_scale_y(-0.02)}%" style="writing-mode: vertical-rl;">
+                    {filetered_data.get("bottom").get("x")[i].substring(0,8) + " -"}</text>
+                <text x="{l_bottom_scale_x(i+0.8)}%" y="{bottom_scale_y(-0.02)}%" style="writing-mode: vertical-rl;">
+                    {filetered_data.get("bottom").get("x")[i].split("-")[1].substring(0,9)}</text>
+            {/each}
+
+            {#each [0.2,0.4,0.6,0.8,1] as i}
+                <line class="tick" y1="{bottom_scale_y(i)}%" y2="{bottom_scale_y(i)}%" x1="{bottom_scale_x(-0.15)}%" x2="{bottom_scale_x(0.15)}%" />
+                <text x="{bottom_scale_x(-1.3)}%" y="{bottom_scale_y(i)+1.3}%">{((i*filetered_data.get("bottom").get("max"))+"").split(".")[0]}</text>
+            {/each}
+        </svg>
     </div><!-- end botL -->
     <div class="item6"><!-- botR -->
         Attendancies per sports type (averaged per game)
@@ -540,7 +580,7 @@
                 {/each}
 
                 <text x="{bottom_scale_x(i+1.2)}%" y="{bottom_scale_y(-0.02)}%" style="writing-mode: vertical-rl;">
-                    {filetered_data.get("bottom").get("x")[i].substring(0,8) + "-"}</text>
+                    {filetered_data.get("bottom").get("x")[i].substring(0,8) + " -"}</text>
                 <text x="{bottom_scale_x(i+0.8)}%" y="{bottom_scale_y(-0.02)}%" style="writing-mode: vertical-rl;">
                     {filetered_data.get("bottom").get("x")[i].split("-")[1].substring(0,9)}</text>
             {/each}
@@ -570,7 +610,10 @@
         font-size: 16px; 
         font-weight: normal;
     }
-    .bar {
+    .item5 .bar {
+        stroke-width: 3%;
+    }
+    .item6 .bar {
         stroke-width: 4%;
     }
     .tick{
@@ -605,7 +648,12 @@
     }
     .item3 { grid-area: topM; }
     .item4 { grid-area: topR; }
-    .item5 { grid-area: botL; }
+    .item5 { 
+        grid-area: botL;
+        font-size: 17px; 
+        font-weight: bold;
+        padding: 3px;
+    }
     .item6 { 
         grid-area: botR;
         font-size: 17px; 
@@ -626,6 +674,7 @@
         background-color: #77797a;
         padding: 3px;
         grid-template-columns: repeat(7, 1fr);
+        grid-template-rows: repeat(4, 1fr);
     }
 
 
