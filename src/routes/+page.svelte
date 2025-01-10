@@ -530,7 +530,73 @@
         <img src="images/top_middle.png" style="height: 40vh;" alt="background image" />
     </div><!-- end topM -->
     <div class="item4"><!-- topR -->
-        <img src="images/top_right.png" style="height: 40vh;" alt="background image" />
+        <div class="top_r_outer" style="">
+            <div style="margin-bottom: 1%;">
+                Best Sports to get medals:
+            </div>
+            <div class="top_pic" style="">
+                <div style="font-weight: bold; margin-top: 3%;">For women:</div>
+                <div class="top_r_box" style="top: 20%;">
+                    <img class="medals" src="images/gold_medal.png" style="" alt="background image" />
+                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("women")[0]}</text>
+                </div>
+                <div class="top_r_box" style=" top: 40%;">
+                    <img class="medals" src="images/silver_medal.png" style="" alt="background image" />
+                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("women")[1]}</text>
+                </div>
+                <div class="top_r_box" style="top: 60%;">
+                    <img class="medals" src="images/bronze_medal.png" style="" alt="background image" />
+                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("women")[2]}</text>
+                </div>
+            </div>
+            <div class="top_pic" style="">
+                <div style="font-weight: bold; margin-top: 3%;">For men:</div>
+                <div class="top_r_box" style="top: 20%;">
+                    <img class="medals" src="images/gold_medal.png" style="" alt="background image" />
+                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("men")[0]}</text>
+                </div>
+                <div class="top_r_box" style=" top: 40%;">
+                    <img class="medals" src="images/silver_medal.png" style="" alt="background image" />
+                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("men")[1]}</text>
+                </div>
+                <div class="top_r_box" style="top: 60%;">
+                    <img class="medals" src="images/bronze_medal.png" style="" alt="background image" />
+                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("men")[2]}</text>
+                </div>
+            </div>
+        </div>
+        <div class="top_r_outer" style="">
+            <div class="top_pic" style="">
+                <div style="font-weight: bold; margin-top: 3%;">For old athletes:</div>
+                <div class="top_r_box" style="top: 20%;">
+                    <img class="medals" src="images/gold_medal.png" style="" alt="background image" />
+                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("old")[0]}</text>
+                </div>
+                <div class="top_r_box" style=" top: 40%;">
+                    <img class="medals" src="images/silver_medal.png" style="" alt="background image" />
+                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("old")[1]}</text>
+                </div>
+                <div class="top_r_box" style="top: 60%;">
+                    <img class="medals" src="images/bronze_medal.png" style="" alt="background image" />
+                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("old")[2]}</text>
+                </div>
+            </div>
+            <div class="top_pic" style="">
+                <div style="font-weight: bold; margin-top: 3%;">For young athletes:</div>
+                <div class="top_r_box" style="top: 20%;">
+                    <img class="medals" src="images/gold_medal.png" style="" alt="background image" />
+                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("young")[0]}</text>
+                </div>
+                <div class="top_r_box" style=" top: 40%;">
+                    <img class="medals" src="images/silver_medal.png" style="" alt="background image" />
+                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("young")[1]}</text>
+                </div>
+                <div class="top_r_box" style="top: 60%;">
+                    <img class="medals" src="images/bronze_medal.png" style="" alt="background image" />
+                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("young")[2]}</text>
+                </div>
+            </div>
+        </div>
     </div><!-- end topR -->
     <div class="item5"><!-- botL -->
         Attendancies averaged per game: <text style="color: red">women</text> and <text style="color: blue">men</text>
@@ -697,6 +763,30 @@
         flex-direction: row;
         float: left;
         position:relative;
+    }
+
+    .top_r_box {
+        text-align: left;
+        height: 1.5em;
+        vertical-align: middle;
+        position: absolute; 
+        left: 5%;
+    }
+    .top_r_text {
+        position: absolute;
+        left: 10%;
+        top: 7%;
+    }
+    .top_r_outer {
+        height: 49%; 
+        width: 100%; 
+        padding: 3px; 
+        font-size: 17px; 
+        font-weight: bold;
+    }
+    .medals {
+        width: 8%;
+        margin-right: 5%;
     }
 
     .podium {
