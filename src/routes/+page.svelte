@@ -1,10 +1,12 @@
-<script lang="ts">    
+<script lang="ts">
+	//import { LOGNAME } from '$env/static/private';
+    
     const { data } = $props();
 
 	//import { color, group } from 'd3';
     import DoubleRangeSlider from './DoubleRangeSlider.svelte';
 	import RangeSlider from 'svelte-range-slider-pips'
-	import { get } from 'svelte/store';
+	//import { get } from 'svelte/store';
     //import { scaleLinear } from 'd3-scale';
 	
     let sports_types = new Map([["1", "Team"], ["2", "Racquet"], ["3", "Combat"], ["4", "Water"], ["5", "Winter"], ["6", "Track/Field"], 
@@ -78,6 +80,7 @@
         let res = apply_filter(unfiltered_data, ui);
         res = calc_bottom(res);
         res = calc_top(res)
+        console.log(res)
         return res;
     }
 
@@ -90,7 +93,7 @@
     
     function calc_top(in_data){
         let top_l = new Map();
-        let top_m = [];
+        let top_m = new Map();
         let top_r = new Map();
 
 
@@ -169,20 +172,58 @@
         //--------------
         
         let groups = sports_types.keys();
+        let top_m_max_age = 0;
+        let top_m_max_hei = 0;
+        let top_m_max_wei = 0;
+        let top_m_min_age = 500;
+        let top_m_min_hei = 500;
+        let top_m_min_wei = 500;
+
         groups.forEach(element => {
             let num = m_num.get(element) ?? 0;
-            var tmp = {sport: sports_types.get(element), "age": 0, "hei": 0, "wei": 0}
+            let tmp = new Map([["sport", sports_types.get(element)], ["age", 0], ["hei", 0], ["wei", 0]]);
             if (num > 0){
                 let age = m_age.get(element);
                 let hei = m_hei.get(element);
                 let wei = m_wei.get(element);
 
-                tmp = {sport: sports_types.get(element), "age": age/num, "hei": hei/num, "wei": wei/num}
+                age = age/num;
+                hei = hei/num;
+                wei = wei/num;
+
+                tmp = new Map([["sport", sports_types.get(element)], ["age", age], ["hei", hei], ["wei", wei]]);
+
+                if (age < top_m_min_age){
+                    top_m_min_age = age;
+                }
+                if (age > top_m_max_age){
+                    top_m_max_age = age;
+                }
+                if (wei < top_m_min_wei){
+                    top_m_min_wei = wei;
+                }
+                if (wei > top_m_max_wei){
+                    top_m_max_wei = wei;
+                }
+                if (hei < top_m_min_hei){
+                    top_m_min_hei = hei;
+                }
+                if (hei > top_m_max_hei){
+                    top_m_max_hei = hei;
+                }
+
+        //console.log(val)
             }
-            top_m.push(tmp);
+            top_m.set(element, tmp);
+            console.log(tmp)
         });
-
-
+        //console.log(top_m)
+        var top_m_stat = new Map([
+            ["age_max", top_m_max_age], ["age_min", top_m_min_age], ["age_diff", top_m_max_age - top_m_min_age],
+            ["hei_max", top_m_max_hei], ["hei_min", top_m_min_hei], ["hei_diff", top_m_max_hei - top_m_min_hei],
+            ["wei_max", top_m_max_wei], ["wei_min", top_m_min_wei], ["wei_diff", top_m_max_wei - top_m_min_wei]
+        ]);
+        console.log(top_m_stat)
 
         //--------------
         // top right
@@ -232,8 +273,38 @@
 
         in_data.set("top_l", top_l)
         in_data.set("top_m", top_m)
+        in_data.set("top_m_stat", top_m_stat)
         in_data.set("top_r", top_r)
         return in_data
+    }
+
+    function transform_top_m (row, col) {
+        let val = ((row - 1) * 3) + col;
+        if (val > 5){
+            val = val - 1;
+        }
+
+        return val;
+    }
+
+    function top_m_age (input_data) {
+        let tmp = input_data - filetered_data.get("top_m_stat").get("age_min");
+        tmp = tmp / filetered_data.get("top_m_stat").get("age_diff");
+        return tmp;
+    }
+
+    function top_m_hei (input_data) {
+        let tmp = input_data - filetered_data.get("top_m_stat").get("hei_min");
+        tmp = tmp / filetered_data.get("top_m_stat").get("hei_diff");
+        console.log("hei", tmp+1)
+        return 1 + tmp;
+    }
+
+    function top_m_wei (input_data) {
+        let tmp = input_data - filetered_data.get("top_m_stat").get("wei_min");
+        tmp = tmp / filetered_data.get("top_m_stat").get("wei_diff");
+        console.log("wei", tmp+1)
+        return 1 + tmp;
     }
 
 
@@ -417,6 +488,10 @@
     function bottom_scale_y (a) { return 100 - (a * bottom_height) - bottom_top}
 
     let bot_color = ["red", "blue", "green", "orange", "grey", "yellow", "pink", "brown"]
+    let men_color = "lightblue";
+    let women_color = "pink";
+    let comp_color = "orange";
+    let grey_color = "grey";
     //console.log(filetered_data.get("bottom").get(1+""))
     
 </script>
@@ -527,7 +602,61 @@
         </div>
     </div><!-- topL -->
     <div class="item3"><!-- topM -->
-        <img src="images/top_middle.png" style="height: 40vh;" alt="background image" />
+        <div class="top_m_sports" style="margin: 0.7%;">
+            Comparison of athletes dimensions:
+        </div>
+        {#each [1,2,3] as row}
+        <div class="top_m_outer" style="">
+            {#each [1,2,3] as col}
+            <div class="mid_pic" style="">
+                {#if row == 2 && col == 2}
+                <!-- <div class="top_m_sports">Legend</div> -->
+                <svg class="" style="margin-top: 3px; left: 3px; position: absolute;" height="98%" width="98%">
+                    <!-- height --><!-- weight -->
+                     <line class="axis" x1="20%" x2="20%" y1="15%" y2="85%"/> 
+                     <line class="axis" x1="15%" x2="65%" y1="80%" y2="80%"/> 
+                     <text x="2%" y="10%" style="font-size: 12px;">height in cm</text>
+                     <text x="68%" y="82%" style="font-size: 12px;">weight</text>
+                     <text x="68%" y="92%" style="font-size: 12px;">in kg</text>
+
+                     <line class="tick" x1="60%" x2="60%" y1="78%" y2="82%" />
+                     <text x="55%" y="93%" style="font-size: 12px;">{(""+filetered_data.get("top_m_stat").get("wei_max")).split(".")[0]}</text>
+                     <line class="tick" x1="40%" x2="40%" y1="78%" y2="82%" />
+                     <text x="35%" y="93%" style="font-size: 12px;">{(""+filetered_data.get("top_m_stat").get("wei_min")).split(".")[0]}</text>
+
+                     <line class="tick" x1="18%" x2="22%" y1="50%" y2="50%" />
+                     <text x="4%" y="54%" style="font-size: 12px;">{(""+filetered_data.get("top_m_stat").get("hei_min")).split(".")[0]}</text>
+                     <line class="tick" x1="18%" x2="22%" y1="20%" y2="20%" />
+                     <text x="4%" y="24%" style="font-size: 12px;">{(""+filetered_data.get("top_m_stat").get("hei_max")).split(".")[0]}</text>
+                    
+                    <!-- age -->
+                    <text x="30%" y="28%" style="font-size: 12px;">The colors' border</text>
+                    <text x="30%" y="38%" style="font-size: 12px;">signal the age:</text>
+                    <text x="30%" y="48%" style="font-size: 12px;">top: {(""+filetered_data.get("top_m_stat").get("age_min")).split(".")[0]}</text>
+                    <text x="30%" y="58%" style="font-size: 12px;">bottom: {(""+filetered_data.get("top_m_stat").get("age_max")).split(".")[0]}</text>
+                    
+                </svg>
+                {:else}
+                
+                <div class="top_m_sports">{filetered_data.get("top_m").get(transform_top_m(row, col) +"").get("sport")}</div>
+                <div class="" style="width: {top_m_wei(filetered_data.get("top_m").get(transform_top_m(row, col) +"").get("wei")) * 20}%;
+                    height: {top_m_hei(filetered_data.get("top_m").get(transform_top_m(row, col) +"").get("hei")) * 30}%;
+                    margin-left:{(100-(top_m_wei(filetered_data.get("top_m").get(transform_top_m(row, col) +"").get("wei")) * 20))/2}%;
+                    margin-top: 5%; position: absolute;">
+                    <svg style="width:100%; height:100%; position: absolute; transform: translateX(-50%);">
+                        <rect style="fill:{comp_color}; width:100%; height:100%" x="0px" y="0px" />
+                        <rect style="fill:{grey_color}; width:100%; 
+                            height:{top_m_age(filetered_data.get("top_m").get(transform_top_m(row, col) +"").get("age")) * 100}%" x="0px" y="0px" />
+                    </svg>
+                    <img class="" src="images/top_m_man.png" width="100%" height="100%" style="top:0px; position: absolute;transform: translateX(-50%);" alt="background image" />
+                    
+                </div>
+             
+                {/if}
+            </div>
+            {/each}
+        </div>
+        {/each}
     </div><!-- end topM -->
     <div class="item4"><!-- topR -->
         <div class="top_r_outer" style="">
@@ -599,7 +728,7 @@
         </div>
     </div><!-- end topR -->
     <div class="item5"><!-- botL -->
-        Attendancies averaged per game: <text style="color: red">women</text> and <text style="color: blue">men</text>
+        Attendancies averaged per game: <text style="color: {women_color}">women</text> and <text style="color: {men_color}">men</text>
         <svg class="bottpic" style="">
             <line class="axis" id="x" x1="{l_bottom_scale_x(-0.5)}%" y1="{bottom_scale_y(0)}%" x2="{l_bottom_scale_x(bot_num_x_ticks+0.5)}%" y2="{bottom_scale_y(0)}%" />
             <line class="axis" id="y" x1="{l_bottom_scale_x(0)}%" y1="{bottom_scale_y(-0.04)}%" x2="{l_bottom_scale_x(0)}%" y2="{bottom_scale_y(1.025)}%" />
@@ -607,9 +736,9 @@
             {#each bot_ticks as i}
                 <line class="tick" y1="{bottom_scale_y(-0.02)}%" y2="{bottom_scale_y(0.02)}%" x1="{l_bottom_scale_x(i+1)}%" x2="{l_bottom_scale_x(i+1)}%" />
 
-                <line class="bar" style="stroke: red;" y1="{bottom_scale_y(0)}%" y2="{bottom_scale_y(filetered_data.get("bottom").get("w")[i] / filetered_data.get("bottom").get("max"))}%" 
+                <line class="bar" style="stroke: {women_color};" y1="{bottom_scale_y(0)}%" y2="{bottom_scale_y(filetered_data.get("bottom").get("w")[i] / filetered_data.get("bottom").get("max"))}%" 
                         x1="{l_bottom_scale_x(i+1.2)}%" x2="{l_bottom_scale_x(i+1.2)}%" />
-                <line class="bar" style="stroke: blue;" y1="{bottom_scale_y(0)}%" y2="{bottom_scale_y(filetered_data.get("bottom").get("m")[i] / filetered_data.get("bottom").get("max"))}%" 
+                <line class="bar" style="stroke: {men_color};" y1="{bottom_scale_y(0)}%" y2="{bottom_scale_y(filetered_data.get("bottom").get("m")[i] / filetered_data.get("bottom").get("max"))}%" 
                         x1="{l_bottom_scale_x(i+0.8)}%" x2="{l_bottom_scale_x(i+0.8)}%" />
 
 
@@ -763,6 +892,30 @@
         flex-direction: row;
         float: left;
         position:relative;
+    }
+    .mid_pic {
+        width:33%; 
+        height: 100%;
+        border: 1px;
+        border-style: solid;
+        border-color: gray;
+        font-size: 16px; 
+        font-weight: normal;
+        text-align: center;
+        flex-direction: row;
+        float: left;
+        position:relative;
+    }
+    .top_m_outer {
+        height: 30%; 
+        width: 100%; 
+        padding: 1px; 
+        font-size: 17px; 
+        font-weight: bold;
+    }
+    .top_m_sports {
+        font-weight: bold; 
+        margin-top: 3%;
     }
 
     .top_r_box {
