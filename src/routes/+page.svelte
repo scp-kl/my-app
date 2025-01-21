@@ -487,10 +487,21 @@
      */
     function bottom_scale_y (a) { return 100 - (a * bottom_height) - bottom_top}
 
-    let bot_color = ["red", "blue", "green", "orange", "grey", "yellow", "pink", "brown"]
-    let men_color = "lightblue";
-    let women_color = "pink";
-    let comp_color = "orange";
+    //let bot_color = ["red", "blue", "green", "orange", "grey", "yellow", "pink", "brown"]
+    //let bot_color = ["#FFCCFF", "#A3D9FF", "#B2F0B1", "#FFEB99", "#FFD1E6", "#FFBC99", "#E2A9FF", "#FFB3B3"]
+    let bot_color = [
+    "#FF8080", // Slightly darker Light Red
+    "#FF99CC", // Slightly darker Light Pink
+    "#80BFFF", // Slightly darker Light Blue
+    "#99E699", // Slightly darker Light Green
+    "#FFD966", // Slightly darker Light Yellow
+    "#FFB3D9", // Slightly darker Pastel Lavender
+    "#FF9966", // Slightly darker Light Coral
+    "#D18CFF"  // Slightly darker Light Violet
+    ]
+    let men_color = bot_color[2];
+    let women_color = bot_color[0];
+    let comp_color = bot_color[6];
     let grey_color = "grey";
     //console.log(filetered_data.get("bottom").get(1+""))
     
@@ -781,9 +792,9 @@
             {/each}
 
             {#each [1,2,3,4,5,6,7,8] as group}<!-- labels right to plot -->
-                <line style="stroke: {bot_color[group-1]}; stroke-width: 3%" y1="{bottom_scale_y(1 - (group * 0.1))}%" y2="{bottom_scale_y(1 - (group * 0.1)) - 4}%"
+                <line style="stroke: {bot_color[group-1]}; stroke-width: 3%" y1="{bottom_scale_y(1 - ((9-group) * 0.1))}%" y2="{bottom_scale_y(1 - ((9-group) * 0.1)) - 4}%"
                 x1="{bottom_scale_x(bot_num_x_ticks+1)}%" x2="{bottom_scale_x(bot_num_x_ticks+1)}%" />
-                <text x="{bottom_scale_x(bot_num_x_ticks+1.5)}%" y="{bottom_scale_y(1 - (group * 0.1))}%">{sports_types.get(group+"")}</text>
+                <text x="{bottom_scale_x(bot_num_x_ticks+1.5)}%" y="{bottom_scale_y(1 - ((9-group) * 0.1))}%">{sports_types.get(group+"")}</text>
             {/each}
 
             {#each [0.2,0.4,0.6,0.8,1] as i}
