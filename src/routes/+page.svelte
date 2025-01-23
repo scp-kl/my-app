@@ -519,62 +519,70 @@
 
 
 <div class="grid-container" style="height:90vh; width: 99vw;">
-    <div class="item1" style="font-size: 17px; font-weight: bold;"><!-- left -->
-        <div style="">
-            <div style="margin: 3px;">
-                Select the Sports Groups:
-                <div style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group1} /> Team Sports </div>
-                <div style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group2} /> Racquet Sports </div>
-                <div style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group3} /> Combat Sports </div>
-                <div style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group4} /> Water Sports </div>
-                <div style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group5} /> Winter Sports </div>
-                <div style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group6} /> 
+    <div class="item1" style=""><!-- left -->
+        <div class="sidebar">
+            <div class="text_l" style="margin: 3px;">
+                <div style="text-align: center; margin-bottom: 0.5sem;">
+                    Select the Sports Groups:
+                </div>
+                <div class="text_l" style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group1} /> Team Sports </div>
+                <div class="text_l" style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group2} /> Racquet Sports </div>
+                <div class="text_l" style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group3} /> Combat Sports </div>
+                <div class="text_l" style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group4} /> Water Sports </div>
+                <div class="text_l" style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group5} /> Winter Sports </div>
+                <div class="text_l" style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group6} /> 
                     Track and Field <br><div style="text-indent:1.6em;">Sports</div> </div>
-                <div style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group7} /> 
+                <div class="text_l" style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group7} /> 
                     Gymnastics and <br><div style="text-indent:1.6em;">Acrobatic Sports</div>  </div>
-                <div style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group8} /> Remaining Sports </div>
+                <div class="text_l" style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group8} /> Remaining Sports </div>
             </div>
         </div>
-        <div style="height:10vh;">
-            <div style="margin: 3px;">
+        <div  class="text_l sidebar" style="border: none">
+            <div class="left_stats">
+                Number of Elements: <br>
+                {filetered_data.get("filtered").length} / 70000
+            </div>
+            <div class="left_stats">
+                Distinct People: <br>
+                {filetered_data.get("distinct").size} / 35658
+            </div>
+            <div class="left_stats">
+                Distinct Games:<br>
+                {filetered_data.get("games").size} / 51
+            </div>
+        </div>
+        <div class="sidebar" style="height:10vh;">
+            <div class="text_l" style="margin: 3px; text-align: center;">
                 Select the year range:
                 <div style="margin: 5px 10px;">
                     <DoubleRangeSlider bind:start={year_slider_min} bind:end={year_slider_max}/>
                 </div>
                 <div class="labels">
-                    <span class="label">{nice(year_min)}</span>
-                    <span class="label">{nice(year_max)}</span>
+                    <span class="label text_l">{nice(year_min)}</span>
+                    <span class="label text_l">{nice(year_max)}</span>
                 </div>
                 <div class="slider">
 	            </div>
             </div>
         </div>
-        <div style="">
-            <div style="margin: 3px;">
+        <div class="sidebar" style=" text-align: center;">
+            <div class="text_l" style="margin: 3px;">
                 Select the Gender:<br>
                 <span style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_men} /> M </span>
                 <span><input type="checkbox" bind:checked={checked_women} /> F </span>
             </div>
         </div>
-        <div style="">
+        <div class="text_l sidebar" style=" text-align: center;">
             <div style="margin: 3px;">
-                Select the Games:<br>
-                <span style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_summer} /> Summer </span>
+                Select the Season:<br>
+                <span style="margin-right: 1.5em;"><input type="checkbox" bind:checked={checked_summer} /> Summer </span>
                 <span><input type="checkbox" bind:checked={checked_winter} /> Winter </span>
             </div>
-        </div>
-        <div style="">
-            Number of Elements: <br>
-            {filetered_data.get("filtered").length} / 70000<br>
-            Distinct people: <br>
-            {filetered_data.get("distinct").size} / 35658<br>
-            Distinct Games:<br>
-            {filetered_data.get("games").size} / 51
         </div>
     </div><!-- end left -->
     <div class="item2"><!-- topL -->
         <div style="height: 49%; width: 100%; padding: 3px; font-size: 17px; font-weight: bold; ">
-            <div>
+            <div class="heading" style="">
                 Best Nations:
             </div>
             <div class="top_pic" style="">
@@ -593,27 +601,27 @@
             </div>
         </div>
         <div style="height: 49%; width: 100%; padding: 3px; font-size: 17px; font-weight: bold;">
-            <div>
+            <div class="heading" style="padding: 1%">
                 Worst Nations:
             </div>
             <div class="top_pic" style="">
                 Absolute:<br>
                 <img class="podium2" src="images/worst_podium.png" style="width: 95%;" alt="background image" />
-                <div style="position: absolute; left: 43%; bottom: 24%;"> {filetered_data.get("top_l").get("worst_abs")[0] ?? 0}</div>
+                <div style="position: absolute; left: 43%; bottom: 22%;"> {filetered_data.get("top_l").get("worst_abs")[0] ?? 0}</div>
                 <div style="position: absolute; left: 12%; bottom: 41%;"> {filetered_data.get("top_l").get("worst_abs")[1] ?? 0}</div>
                 <div style="position: absolute; left: 73%; bottom: 35%;"> {filetered_data.get("top_l").get("worst_abs")[2] ?? 0}</div>
             </div>
             <div class="top_pic" style="">
                 Relative:<br>
                 <img class="podium2" src="images/worst_podium.png" style="width: 95%;" alt="background image" />
-                <div style="position: absolute; left: 43%; bottom: 24%;"> {filetered_data.get("top_l").get("worst_rel")[0] ?? 0}</div>
+                <div style="position: absolute; left: 43%; bottom: 22%;"> {filetered_data.get("top_l").get("worst_rel")[0] ?? 0}</div>
                 <div style="position: absolute; left: 12%; bottom: 41%;"> {filetered_data.get("top_l").get("worst_rel")[1] ?? 0}</div>
                 <div style="position: absolute; left: 73%; bottom: 35%;"> {filetered_data.get("top_l").get("worst_rel")[2] ?? 0}</div>
             </div>
         </div>
     </div><!-- topL -->
     <div class="item3"><!-- topM -->
-        <div class="top_m_sports" style="margin: 0.7%;">
+        <div class="top_m_sports heading" style="margin: 0.7%;">
             Comparison of athletes dimensions:
         </div>
         {#each [1,2,3] as row}
@@ -622,11 +630,14 @@
             <div class="mid_pic" style="">
                 {#if row == 2 && col == 2}
                 <!-- <div class="top_m_sports">Legend</div> -->
-                <svg class="" style="margin-top: 3px; left: 3px; position: absolute;" height="98%" width="98%">
+                <svg class="" style="margin-top: 3px; left: 3px; position: absolute; transform: translate(-5%, 5%);" height="98%" width="98%">
+
+                    <rect style="fill:{comp_color}; width:30%; height:45%; z-index: -50;top:80%;left: 20%;" x="20%" y="35%" />
+                    
                     <!-- height --><!-- weight -->
                      <line class="axis" x1="20%" x2="20%" y1="15%" y2="85%"/> 
                      <line class="axis" x1="15%" x2="65%" y1="80%" y2="80%"/> 
-                     <text x="2%" y="10%" style="font-size: 12px;">height in cm</text>
+                     <text x="3%" y="10%" style="font-size: 12px;">height in cm</text>
                      <text x="68%" y="82%" style="font-size: 12px;">weight</text>
                      <text x="68%" y="92%" style="font-size: 12px;">in kg</text>
 
@@ -639,14 +650,19 @@
                      <text x="4%" y="54%" style="font-size: 12px;">{(""+filetered_data.get("top_m_stat").get("hei_min")).split(".")[0]}</text>
                      <line class="tick" x1="18%" x2="22%" y1="20%" y2="20%" />
                      <text x="4%" y="24%" style="font-size: 12px;">{(""+filetered_data.get("top_m_stat").get("hei_max")).split(".")[0]}</text>
+
+                    
+
+                    
                     
                     <!-- age -->
-                    <text x="30%" y="28%" style="font-size: 12px;">The colors' border</text>
+                    <!-- <text x="30%" y="28%" style="font-size: 12px;">The colors' border</text>
                     <text x="30%" y="38%" style="font-size: 12px;">signal the age:</text>
                     <text x="30%" y="48%" style="font-size: 12px;">top: {(""+filetered_data.get("top_m_stat").get("age_min")).split(".")[0]}</text>
-                    <text x="30%" y="58%" style="font-size: 12px;">bottom: {(""+filetered_data.get("top_m_stat").get("age_max")).split(".")[0]}</text>
+                    <text x="30%" y="58%" style="font-size: 12px;">bottom: {(""+filetered_data.get("top_m_stat").get("age_max")).split(".")[0]}</text> -->
                     
                 </svg>
+                <img src="images/top_m_man.png" style="position:absolute; width:30%; height:45%; z-index: 50;bottom:14%;left: 16%;" alt=""/>
                 {:else}
                 
                 <div class="top_m_sports">{filetered_data.get("top_m").get(transform_top_m(row, col) +"").get("sport")}</div>
@@ -671,7 +687,7 @@
     </div><!-- end topM -->
     <div class="item4"><!-- topR -->
         <div class="top_r_outer" style="">
-            <div style="margin-bottom: 1%;">
+            <div class="heading" style="margin-bottom: 1%;">
                 Best Sports to get medals:
             </div>
             <div class="top_pic" style="">
@@ -739,7 +755,9 @@
         </div>
     </div><!-- end topR -->
     <div class="item5"><!-- botL -->
-        Attendancies averaged per game: <text style="color: {women_color}">women</text> and <text style="color: {men_color}">men</text>
+        <div class="heading">
+            Attendancies averaged per game: <text style="color: {women_color}">women</text> and <text style="color: {men_color}">men</text>
+        </div>
         <svg class="bottpic" style="">
             <line class="axis" id="x" x1="{l_bottom_scale_x(-0.5)}%" y1="{bottom_scale_y(0)}%" x2="{l_bottom_scale_x(bot_num_x_ticks+0.5)}%" y2="{bottom_scale_y(0)}%" />
             <line class="axis" id="y" x1="{l_bottom_scale_x(0)}%" y1="{bottom_scale_y(-0.04)}%" x2="{l_bottom_scale_x(0)}%" y2="{bottom_scale_y(1.025)}%" />
@@ -762,12 +780,14 @@
 
             {#each [0.2,0.4,0.6,0.8,1] as i}
                 <line class="tick" y1="{bottom_scale_y(i)}%" y2="{bottom_scale_y(i)}%" x1="{bottom_scale_x(-0.15)}%" x2="{bottom_scale_x(0.15)}%" />
-                <text x="{bottom_scale_x(-1.3)}%" y="{bottom_scale_y(i)+1.3}%">{((i*filetered_data.get("bottom").get("max"))+"").split(".")[0]}</text>
+                <text x="{bottom_scale_x(-1.3)}%" y="{bottom_scale_y(i)+1.3}%" style="font-size: 13px;">{((i*filetered_data.get("bottom").get("max"))+"").split(".")[0]}</text>
             {/each}
         </svg>
     </div><!-- end botL -->
     <div class="item6"><!-- botR -->
-        Attendancies per sports type (averaged per game)
+        <div class="heading">
+            Attendancies per sports type (averaged per game)
+        </div>
         <svg class="bottpic" style="">
             <line class="axis" id="x" x1="{bottom_scale_x(-0.5)}%" y1="{bottom_scale_y(0)}%" x2="{bottom_scale_x(bot_num_x_ticks+0.5)}%" y2="{bottom_scale_y(0)}%" />
             <line class="axis" id="y" x1="{bottom_scale_x(0)}%" y1="{bottom_scale_y(-0.04)}%" x2="{bottom_scale_x(0)}%" y2="{bottom_scale_y(1.025)}%" />
@@ -799,7 +819,7 @@
 
             {#each [0.2,0.4,0.6,0.8,1] as i}
                 <line class="tick" y1="{bottom_scale_y(i)}%" y2="{bottom_scale_y(i)}%" x1="{bottom_scale_x(-0.15)}%" x2="{bottom_scale_x(0.15)}%" />
-                <text x="{bottom_scale_x(-1.2)}%" y="{bottom_scale_y(i)+1.3}%">{i*100}%</text>
+                <text x="{bottom_scale_x(-1.2)}%" y="{bottom_scale_y(i)+1.3}%" style="font-size: 13px;">{i*100}%</text>
             {/each}
         </svg>
     </div><!-- end botR -->
@@ -807,12 +827,33 @@
 
 <!-- class .   id # -->
 <style>
+    .sidebar {
+        border-width: 1px; 
+        border-radius: 5px; 
+        border-color: grey; 
+        border-style: solid; 
+        width: 98%; 
+        margin-left: 1%;
+        padding: 1%;
+    }
+    .left_stats {
+        border-width: 2px; 
+        border-radius: 3px; 
+        border-color: grey; 
+        border-style: solid; 
+        width: 98%; 
+        margin: 1%;
+        padding: 1%;
+        text-align: center;
+
+    }
     .bottpic {
         width:99%; 
         height: 90%; 
         margin: 5px;
         padding: 3px;
         border: 1px gray solid;
+        border-radius: 13px;
         font-size: 16px; 
         font-weight: normal;
     }
@@ -845,29 +886,19 @@
         justify-content: space-around;
         overflow-y: auto;
     }
-    .item1 > div {
-        /* border-bottom: 1px solid black; */
-        border-top: none;
-        border-left: none;
-        border-right: none;
-        /* flex-grow: 1; */
-    }
     .item3 { grid-area: topM; }
     .item4 { grid-area: topR; }
     .item5 { 
         grid-area: botL;
-        font-size: 17px; 
+        font-size: 20px; 
         font-weight: bold;
         padding: 3px;
     }
     .item6 { 
         grid-area: botR;
-        font-size: 17px; 
+        font-size: 20px; 
         font-weight: bold;
         padding: 3px;
-    }
-    .grid-container > div {/* div elements of the grid */
-    background-color: lightgrey;
     }
     .grid-container {
         display: grid;
@@ -876,13 +907,12 @@
             'left topL topL topM topM topR topR'
             'left botL botL botL botR botR botR'
             'left botL botL botL botR botR botR';
-        gap: 3px;
+        gap: 2px;
         background-color: #77797a;
-        padding: 3px;
+        padding: 2px;
         grid-template-columns: repeat(7, 1fr);
         grid-template-rows: repeat(4, 1fr);
     }
-
 
     .item2 { 
         grid-area: topL;
@@ -895,8 +925,8 @@
         width:49%; 
         height: 90%;
         border: 1px;
-        border-style: solid;
-        border-color: gray;
+        /* border-style: solid;
+        border-color: gray; */
         font-size: 16px; 
         font-weight: normal;
         text-align: center;
@@ -907,9 +937,9 @@
     .mid_pic {
         width:33%; 
         height: 100%;
-        border: 1px;
+        /* border: 1px;
         border-style: solid;
-        border-color: gray;
+        border-color: gray; */
         font-size: 16px; 
         font-weight: normal;
         text-align: center;
@@ -921,7 +951,7 @@
         height: 30%; 
         width: 100%; 
         padding: 1px; 
-        font-size: 17px; 
+        font-size: 20px; 
         font-weight: bold;
     }
     .top_m_sports {
@@ -935,6 +965,7 @@
         vertical-align: middle;
         position: absolute; 
         left: 5%;
+        margin-left: 7%;
     }
     .top_r_text {
         position: absolute;
@@ -945,7 +976,7 @@
         height: 49%; 
         width: 100%; 
         padding: 3px; 
-        font-size: 17px; 
+        font-size: 20px; 
         font-weight: bold;
     }
     .medals {
@@ -965,9 +996,22 @@
         left: 0.45em;
     }
 
+    .heading {
+        font-size: 20px;
+        text-align: center;
+        font-weight: bold;
+    }
+    .text_l {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
 
     :global(body) {
-        background-color: lightgrey;
+        background-color: rgb(233, 233, 233);
+    }
+    .grid-container > div {/* div elements of the grid */
+        background-color: rgb(233, 233, 233);
     }
 
     .show {
