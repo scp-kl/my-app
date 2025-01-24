@@ -38,25 +38,25 @@
 		return d.toFixed(0);
 	}
 
-    function check_gender (point){
+    function check_gender (point:any){
         return ((checked_women && point.Sex == "F") || (checked_men && point.Sex == "M"));
     }
 
-    function check_type (point){
+    function check_type (point:any){
         return ((checked_group1 && point.Group == "1") || (checked_group2 && point.Group == "2") || (checked_group3 && point.Group == "3") || 
                 (checked_group4 && point.Group == "4") || (checked_group5 && point.Group == "5") || (checked_group6 && point.Group == "6") || 
                 (checked_group7 && point.Group == "7") || (checked_group8 && point.Group == "8"));
     }
 
-    function check_season (point){
+    function check_season (point:any){
         return ((checked_summer && point.Season == "Summer") || (checked_winter && point.Season == "Winter"));
     }
 
-    function apply_filter (unfiltered_data, ui){
+    function apply_filter (unfiltered_data:any, ui:any){
         let output : any[] = [];
         let distinct_set = new Set();
         let games_set = new Set();
-        unfiltered_data.forEach(point => {
+        unfiltered_data.forEach((point: { Year: number; ID: unknown; Games: unknown; }) => {
             if (year_min <= point.Year && year_max >= point.Year &&
                 check_gender(point) && check_season(point)
             ){
@@ -76,7 +76,7 @@
 
     //const scale_bl_x = scaleLinear().domain([0,2000]).range(200,10000)
 
-    function update_after_selection(unfiltered_data, ui){
+    function update_after_selection(unfiltered_data:any, ui:any){
         let res = apply_filter(unfiltered_data, ui);
         res = calc_bottom(res);
         res = calc_top(res)
@@ -91,7 +91,7 @@
     //-------------------------------------------------------------------------
 
     
-    function calc_top(in_data){
+    function calc_top(in_data:any){
         let top_l = new Map();
         let top_m = new Map();
         let top_r = new Map();
@@ -101,7 +101,7 @@
         const m_age = new Map(); const m_num = new Map(); const m_wei = new Map(); const m_hei = new Map();
         const r_w_med = new Map(); const r_w_num = new Map(); const r_m_med = new Map(); const r_m_num = new Map(); const r_num = new Map(); const r_age = new Map();
 
-        in_data.get("filtered").forEach((element) => {
+        in_data.get("filtered").forEach((element:any) => {
             if (check_type(element)){
                 l_num.set(element.NOC, (l_num.get(element.NOC) ?? 0) +1);
             }
@@ -146,8 +146,8 @@
         //--------------
 
         let keyset = l_num.keys();
-        let sort_abs = []
-        let sort_rel = []
+        let sort_abs :any[]= []
+        let sort_rel:any[] = []
         keyset.forEach((element) => {
             let num = l_num.get(element);
             let med = l_med.get(element) ?? 0;
@@ -229,9 +229,9 @@
         // top right
         //--------------
 
-        let woman = []
-        let men = []
-        let age = []
+        let woman:any[] = []
+        let men:any[] = []
+        let age:any[] = []
         groups = sports_types.keys();
         groups.forEach(element => {
             let gr = sports_types.get(element)
@@ -278,7 +278,7 @@
         return in_data
     }
 
-    function transform_top_m (row, col) {
+    function transform_top_m (row:any, col:any) {
         let val = ((row - 1) * 3) + col;
         if (val > 5){
             val = val - 1;
@@ -287,20 +287,20 @@
         return val;
     }
 
-    function top_m_age (input_data) {
+    function top_m_age (input_data:number) {
         let tmp = input_data - filetered_data.get("top_m_stat").get("age_min");
         tmp = tmp / filetered_data.get("top_m_stat").get("age_diff");
         return tmp;
     }
 
-    function top_m_hei (input_data) {
+    function top_m_hei (input_data:number) {
         let tmp = input_data - filetered_data.get("top_m_stat").get("hei_min");
         tmp = tmp / filetered_data.get("top_m_stat").get("hei_diff");
         //console.log("hei", tmp+1)
         return 1 + tmp;
     }
 
-    function top_m_wei (input_data) {
+    function top_m_wei (input_data:number) {
         let tmp = input_data - filetered_data.get("top_m_stat").get("wei_min");
         tmp = tmp / filetered_data.get("top_m_stat").get("wei_diff");
         //console.log("wei", tmp+1)
@@ -316,7 +316,7 @@
     let bot_ticks = Array(bot_num_x_ticks).fill(0).map((_, i) => i)
     //console.log(bot_ticks)
 
-    function calc_bottom(in_data){
+    function calc_bottom(in_data:any){
         let bottom_dict = new Map();
 
 
@@ -369,7 +369,7 @@
             num_w.push(0)
         }
 
-        in_data.get("filtered").forEach((element) => {
+        in_data.get("filtered").forEach((element:any) => {
             for (var i = 0; i < bot_num_x_ticks; i++){
                 if (element.Year <= x_comp[i]){
                     if (element.Sex == "M"){
@@ -475,17 +475,17 @@
     /**
 	 * @param {any} a
 	 */
-     function bottom_scale_x (a) { return a * (bottom_width / (bot_num_x_ticks + 1)) + bottom_left}
+     function bottom_scale_x (a:number) { return a * (bottom_width / (bot_num_x_ticks + 1)) + bottom_left}
 
     /**
 	 * @param {any} a
 	 */
-     function l_bottom_scale_x (a) { return a * ((95 - bottom_left) / (bot_num_x_ticks + 1)) + bottom_left}
+     function l_bottom_scale_x (a:number) { return a * ((95 - bottom_left) / (bot_num_x_ticks + 1)) + bottom_left}
 
     /**
      * @param {any} a
      */
-    function bottom_scale_y (a) { return 100 - (a * bottom_height) - bottom_top}
+    function bottom_scale_y (a:number) { return 100 - (a * bottom_height) - bottom_top}
 
     //let bot_color = ["red", "blue", "green", "orange", "grey", "yellow", "pink", "brown"]
     //let bot_color = ["#FFCCFF", "#A3D9FF", "#B2F0B1", "#FFEB99", "#FFD1E6", "#FFBC99", "#E2A9FF", "#FFB3B3"]
@@ -505,7 +505,7 @@
     let grey_color = "grey";
     //console.log(filetered_data.get("bottom").get(1+""))
 
-    function scale_top_m_color (a) {
+    function scale_top_m_color (a:number) {
         let red = 255;
         let green = 153;
         let blue = 102;
@@ -515,7 +515,7 @@
         let b_diff = ((blue + ((137 - blue) * a))+"").split(".")[0];
 
         let res = "rgb(" + (r_diff) + ", " + g_diff + ", " + b_diff + ")";
-        console.log(a + ": " + res)/* TODO: delete */
+        
         return res
     }
     
@@ -670,14 +670,14 @@
             </div>
             <div class="top_pic" style="">
                 Absolute:<br>
-                <img class="podium" src="images/best_podium.png" style="width: 95%;" alt="background image" />
+                <img class="podium" src="images/best_podium.png" style="width: 95%;" alt="medal" />
                 <div style="position: absolute; left: 43%; bottom: 55%;"> {filetered_data.get("top_l").get("best_abs")[0] ?? 0}</div>
                 <div style="position: absolute; left: 12%; bottom: 41%;"> {filetered_data.get("top_l").get("best_abs")[1] ?? 0}</div>
                 <div style="position: absolute; left: 73%; bottom: 35%;"> {filetered_data.get("top_l").get("best_abs")[2] ?? 0}</div>
             </div>
             <div class="top_pic" style="">
                 Relative:<br>
-                <img class="podium" src="images/best_podium.png" style="width: 95%;" alt="background image" />
+                <img class="podium" src="images/best_podium.png" style="width: 95%;" alt="medal" />
                 <div style="position: absolute; left: 43%; bottom: 55%;"> {filetered_data.get("top_l").get("best_rel")[0] ?? 0}</div>
                 <div style="position: absolute; left: 12%; bottom: 41%;"> {filetered_data.get("top_l").get("best_rel")[1] ?? 0}</div>
                 <div style="position: absolute; left: 73%; bottom: 35%;"> {filetered_data.get("top_l").get("best_rel")[2] ?? 0}</div>
@@ -689,14 +689,14 @@
             </div>
             <div class="top_pic" style="">
                 Absolute:<br>
-                <img class="podium2" src="images/worst_podium.png" style="width: 95%;" alt="background image" />
+                <img class="podium2" src="images/worst_podium.png" style="width: 95%;" alt="medal" />
                 <div style="position: absolute; left: 43%; bottom: 22%;"> {filetered_data.get("top_l").get("worst_abs")[0] ?? 0}</div>
                 <div style="position: absolute; left: 12%; bottom: 41%;"> {filetered_data.get("top_l").get("worst_abs")[1] ?? 0}</div>
                 <div style="position: absolute; left: 73%; bottom: 35%;"> {filetered_data.get("top_l").get("worst_abs")[2] ?? 0}</div>
             </div>
             <div class="top_pic" style="">
                 Relative:<br>
-                <img class="podium2" src="images/worst_podium.png" style="width: 95%;" alt="background image" />
+                <img class="podium2" src="images/worst_podium.png" style="width: 95%;" alt="medal" />
                 <div style="position: absolute; left: 43%; bottom: 22%;"> {filetered_data.get("top_l").get("worst_rel")[0] ?? 0}</div>
                 <div style="position: absolute; left: 12%; bottom: 41%;"> {filetered_data.get("top_l").get("worst_rel")[1] ?? 0}</div>
                 <div style="position: absolute; left: 73%; bottom: 35%;"> {filetered_data.get("top_l").get("worst_rel")[2] ?? 0}</div>
@@ -764,7 +764,7 @@
                         <!-- <rect style="fill:{grey_color}; width:100%; 
                             height:{top_m_age(filetered_data.get("top_m").get(transform_top_m(row, col) +"").get("age")) * 100}%" x="0px" y="0px" /> -->
                     </svg>
-                    <img class="" src="images/top_m_man.png" width="100%" height="100%" style="top:0px; position: absolute;transform: translateX(-50%);" alt="background image" />
+                    <img class="" src="images/top_m_man.png" width="100%" height="100%" style="top:0px; position: absolute;transform: translateX(-50%);" alt="medal" />
                     
                 </div>
              
@@ -782,30 +782,30 @@
             <div class="top_pic" style="">
                 <div style="font-weight: bold; margin-top: 3%;">For women:</div>
                 <div class="top_r_box" style="top: 20%;">
-                    <img class="medals" src="images/gold_medal.png" style="" alt="background image" />
+                    <img class="medals" src="images/gold_medal.png" style="" alt="medal" />
                     <text class="top_r_text" style="">{filetered_data.get("top_r").get("women")[0]}</text>
                 </div>
                 <div class="top_r_box" style=" top: 40%;">
-                    <img class="medals" src="images/silver_medal.png" style="" alt="background image" />
+                    <img class="medals" src="images/silver_medal.png" style="" alt="medal" />
                     <text class="top_r_text" style="">{filetered_data.get("top_r").get("women")[1]}</text>
                 </div>
                 <div class="top_r_box" style="top: 60%;">
-                    <img class="medals" src="images/bronze_medal.png" style="" alt="background image" />
+                    <img class="medals" src="images/bronze_medal.png" style="" alt="medal" />
                     <text class="top_r_text" style="">{filetered_data.get("top_r").get("women")[2]}</text>
                 </div>
             </div>
             <div class="top_pic" style="">
                 <div style="font-weight: bold; margin-top: 3%;">For men:</div>
                 <div class="top_r_box" style="top: 20%;">
-                    <img class="medals" src="images/gold_medal.png" style="" alt="background image" />
+                    <img class="medals" src="images/gold_medal.png" style="" alt="medal" />
                     <text class="top_r_text" style="">{filetered_data.get("top_r").get("men")[0]}</text>
                 </div>
                 <div class="top_r_box" style=" top: 40%;">
-                    <img class="medals" src="images/silver_medal.png" style="" alt="background image" />
+                    <img class="medals" src="images/silver_medal.png" style="" alt="medal" />
                     <text class="top_r_text" style="">{filetered_data.get("top_r").get("men")[1]}</text>
                 </div>
                 <div class="top_r_box" style="top: 60%;">
-                    <img class="medals" src="images/bronze_medal.png" style="" alt="background image" />
+                    <img class="medals" src="images/bronze_medal.png" style="" alt="medal" />
                     <text class="top_r_text" style="">{filetered_data.get("top_r").get("men")[2]}</text>
                 </div>
             </div>
@@ -814,30 +814,30 @@
             <div class="top_pic" style="">
                 <div style="font-weight: bold; margin-top: 3%;">For old athletes:</div>
                 <div class="top_r_box" style="top: 20%;">
-                    <img class="medals" src="images/gold_medal.png" style="" alt="background image" />
+                    <img class="medals" src="images/gold_medal.png" style="" alt="medal" />
                     <text class="top_r_text" style="">{filetered_data.get("top_r").get("old")[0]}</text>
                 </div>
                 <div class="top_r_box" style=" top: 40%;">
-                    <img class="medals" src="images/silver_medal.png" style="" alt="background image" />
+                    <img class="medals" src="images/silver_medal.png" style="" alt="medal" />
                     <text class="top_r_text" style="">{filetered_data.get("top_r").get("old")[1]}</text>
                 </div>
                 <div class="top_r_box" style="top: 60%;">
-                    <img class="medals" src="images/bronze_medal.png" style="" alt="background image" />
+                    <img class="medals" src="images/bronze_medal.png" style="" alt="medal" />
                     <text class="top_r_text" style="">{filetered_data.get("top_r").get("old")[2]}</text>
                 </div>
             </div>
             <div class="top_pic" style="">
                 <div style="font-weight: bold; margin-top: 3%;">For young athletes:</div>
                 <div class="top_r_box" style="top: 20%;">
-                    <img class="medals" src="images/gold_medal.png" style="" alt="background image" />
+                    <img class="medals" src="images/gold_medal.png" style="" alt="medal" />
                     <text class="top_r_text" style="">{filetered_data.get("top_r").get("young")[0]}</text>
                 </div>
                 <div class="top_r_box" style=" top: 40%;">
-                    <img class="medals" src="images/silver_medal.png" style="" alt="background image" />
+                    <img class="medals" src="images/silver_medal.png" style="" alt="medal" />
                     <text class="top_r_text" style="">{filetered_data.get("top_r").get("young")[1]}</text>
                 </div>
                 <div class="top_r_box" style="top: 60%;">
-                    <img class="medals" src="images/bronze_medal.png" style="" alt="background image" />
+                    <img class="medals" src="images/bronze_medal.png" style="" alt="medal" />
                     <text class="top_r_text" style="">{filetered_data.get("top_r").get("young")[2]}</text>
                 </div>
             </div>
@@ -1109,11 +1109,11 @@
         background-color: rgb(233, 233, 233);
     }
 
-    .show {
+    /* .show {
         border: 1px;
         border-style: solid;
         border-color: greenyellow;
-    }
+    } */
 
     .tooltipped{
         position: relative;
@@ -1140,11 +1140,6 @@
         left: 30%;
         width: 70%;
         border-top-left-radius: 0;
-    }
-    .tooltipped .tooltip.tooltip-bottom{
-        top: 100%;
-        left: 0;
-        min-width: 100%;
     }
     .tooltipped:hover .tooltip{
         opacity: 1;
