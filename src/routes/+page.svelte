@@ -751,7 +751,7 @@
                     <text x="80%" y="50.5%" style="">{(""+filetered_data.get("top_m_stat").get("age_max")).split(".")[0]}</text>
                     
                 </svg>
-                <img src="images/top_m_man.png" style="position:absolute; width:30%; height:45%; z-index: 50;bottom:15%;left: 16.5%;" alt=""/>
+                <img src="images/top_m_man.png" style="position:absolute; width:30%; height:45%; z-index: 50;bottom:15%;left: 17.5%;" alt=""/>
                 {:else}
                 
                 <div class="top_m_sports">{filetered_data.get("top_m").get(transform_top_m(row, col) +"").get("sport")}</div>
@@ -996,11 +996,16 @@
             'left topL topL topM topM topR topR'
             'left botL botL botL botR botR botR'
             'left botL botL botL botR botR botR';
-        gap: 2px;
-        background-color: #77797a;
+        gap: 14px;
+        /*background-color: #77797a;*/
         padding: 2px;
         grid-template-columns: repeat(7, 1fr);
         grid-template-rows: repeat(4, 1fr);
+    }
+    .grid-container>*{
+        border-radius: 7px;
+        background-color: white;
+        box-shadow: 0px 0px 10px #a1a1a1;
     }
 
     .item2 { 
