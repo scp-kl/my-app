@@ -658,7 +658,7 @@
         <div class="text_l sidebar" style=" text-align: center;">
             <div style="margin: 3px;">
                 Select the Season:<br>
-                <span style="margin-right: 1.5em;"><input type="checkbox" bind:checked={checked_summer} /> Summer </span>
+                <span><input type="checkbox" bind:checked={checked_summer} /> Summer </span>
                 <span><input type="checkbox" bind:checked={checked_winter} /> Winter </span>
             </div>
         </div>
