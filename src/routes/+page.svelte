@@ -80,7 +80,7 @@
         let res = apply_filter(unfiltered_data, ui);
         res = calc_bottom(res);
         res = calc_top(res)
-        console.log(res)
+        //console.log(res)
         return res;
     }
 
@@ -215,7 +215,7 @@
         //console.log(val)
             }
             top_m.set(element, tmp);
-            console.log(tmp)
+            //console.log(tmp)
         });
         //console.log(top_m)
         var top_m_stat = new Map([
@@ -223,7 +223,7 @@
             ["hei_max", top_m_max_hei], ["hei_min", top_m_min_hei], ["hei_diff", top_m_max_hei - top_m_min_hei],
             ["wei_max", top_m_max_wei], ["wei_min", top_m_min_wei], ["wei_diff", top_m_max_wei - top_m_min_wei]
         ]);
-        console.log(top_m_stat)
+        //console.log(top_m_stat)
 
         //--------------
         // top right
@@ -296,14 +296,14 @@
     function top_m_hei (input_data) {
         let tmp = input_data - filetered_data.get("top_m_stat").get("hei_min");
         tmp = tmp / filetered_data.get("top_m_stat").get("hei_diff");
-        console.log("hei", tmp+1)
+        //console.log("hei", tmp+1)
         return 1 + tmp;
     }
 
     function top_m_wei (input_data) {
         let tmp = input_data - filetered_data.get("top_m_stat").get("wei_min");
         tmp = tmp / filetered_data.get("top_m_stat").get("wei_diff");
-        console.log("wei", tmp+1)
+        //console.log("wei", tmp+1)
         return 1 + tmp;
     }
 
@@ -504,6 +504,20 @@
     let comp_color = bot_color[6];
     let grey_color = "grey";
     //console.log(filetered_data.get("bottom").get(1+""))
+
+    function scale_top_m_color (a) {
+        let red = 255;
+        let green = 153;
+        let blue = 102;
+
+        let r_diff = ((red +((137 - red) * a))+"").split(".")[0];
+        let g_diff = ((green + ((137 - green) * a))+"").split(".")[0];
+        let b_diff = ((blue + ((137 - blue) * a))+"").split(".")[0];
+
+        let res = "rgb(" + (r_diff) + ", " + g_diff + ", " + b_diff + ")";
+        console.log(a + ": " + res)/* TODO: delete */
+        return res
+    }
     
 </script>
 
@@ -630,9 +644,9 @@
             <div class="mid_pic" style="">
                 {#if row == 2 && col == 2}
                 <!-- <div class="top_m_sports">Legend</div> -->
-                <svg class="" style="margin-top: 3px; left: 3px; position: absolute; transform: translate(-5%, 5%);" height="98%" width="98%">
+                <svg class="" style="margin-top: 3px; left: 3px; position: absolute; transform: translate(-5%, 5%); font-size: 12px;" height="98%" width="98%">
 
-                    <rect style="fill:{comp_color}; width:30%; height:45%; z-index: -50;top:80%;left: 20%;" x="20%" y="35%" />
+                    <rect style="fill:{scale_top_m_color(0.5)}; width:30%; height:45%; z-index: -50;top:80%;left: 20%;" x="21%" y="33.5%" />
                     
                     <!-- height --><!-- weight -->
                      <line class="axis" x1="20%" x2="20%" y1="15%" y2="85%"/> 
@@ -660,9 +674,15 @@
                     <text x="30%" y="38%" style="font-size: 12px;">signal the age:</text>
                     <text x="30%" y="48%" style="font-size: 12px;">top: {(""+filetered_data.get("top_m_stat").get("age_min")).split(".")[0]}</text>
                     <text x="30%" y="58%" style="font-size: 12px;">bottom: {(""+filetered_data.get("top_m_stat").get("age_max")).split(".")[0]}</text> -->
+
+                    <text x="70%" y="11%" style="">Age:</text>
+                    <rect style="height: 1em; width:1em; fill: {scale_top_m_color(0)}" x="70%" y="21%" />
+                    <text x="80%" y="30%" style="">{(""+filetered_data.get("top_m_stat").get("age_min")).split(".")[0]}</text>
+                    <rect style="height: 1em; width:1em; fill: {scale_top_m_color(1)}" x="70%" y="41%" />
+                    <text x="80%" y="50.5%" style="">{(""+filetered_data.get("top_m_stat").get("age_max")).split(".")[0]}</text>
                     
                 </svg>
-                <img src="images/top_m_man.png" style="position:absolute; width:30%; height:45%; z-index: 50;bottom:14%;left: 16%;" alt=""/>
+                <img src="images/top_m_man.png" style="position:absolute; width:30%; height:45%; z-index: 50;bottom:15%;left: 16.5%;" alt=""/>
                 {:else}
                 
                 <div class="top_m_sports">{filetered_data.get("top_m").get(transform_top_m(row, col) +"").get("sport")}</div>
@@ -671,9 +691,9 @@
                     margin-left:{(100-(top_m_wei(filetered_data.get("top_m").get(transform_top_m(row, col) +"").get("wei")) * 20))/2}%;
                     margin-top: 5%; position: absolute;">
                     <svg style="width:100%; height:100%; position: absolute; transform: translateX(-50%);">
-                        <rect style="fill:{comp_color}; width:100%; height:100%" x="0px" y="0px" />
-                        <rect style="fill:{grey_color}; width:100%; 
-                            height:{top_m_age(filetered_data.get("top_m").get(transform_top_m(row, col) +"").get("age")) * 100}%" x="0px" y="0px" />
+                        <rect style="fill:{scale_top_m_color(top_m_age(filetered_data.get("top_m").get(transform_top_m(row, col) +"").get("age")))}; width:100%; height:100%" x="0px" y="0px" />
+                        <!-- <rect style="fill:{grey_color}; width:100%; 
+                            height:{top_m_age(filetered_data.get("top_m").get(transform_top_m(row, col) +"").get("age")) * 100}%" x="0px" y="0px" /> -->
                     </svg>
                     <img class="" src="images/top_m_man.png" width="100%" height="100%" style="top:0px; position: absolute;transform: translateX(-50%);" alt="background image" />
                     
