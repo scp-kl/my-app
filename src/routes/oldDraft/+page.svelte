@@ -219,9 +219,6 @@
         stroke: green;
         stroke-width: 13;
     }
-    :global(body) {
-        background-color: lightgrey;
-    }
     #x_ticks{
         writing-mode: vertical-lr;
     }

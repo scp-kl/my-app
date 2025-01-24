@@ -539,16 +539,85 @@
                 <div style="text-align: center; margin-bottom: 0.5sem;">
                     Select the Sports Groups:
                 </div>
-                <div class="text_l" style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group1} /> Team Sports </div>
-                <div class="text_l" style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group2} /> Racquet Sports </div>
-                <div class="text_l" style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group3} /> Combat Sports </div>
-                <div class="text_l" style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group4} /> Water Sports </div>
-                <div class="text_l" style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group5} /> Winter Sports </div>
-                <div class="text_l" style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group6} /> 
-                    Track and Field <br><div style="text-indent:1.6em;">Sports</div> </div>
-                <div class="text_l" style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group7} /> 
-                    Gymnastics and <br><div style="text-indent:1.6em;">Acrobatic Sports</div>  </div>
-                <div class="text_l" style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_group8} /> Remaining Sports </div>
+                <div class="text_l uistack tooltipped" style="">
+                    <input type="checkbox" id="group1" bind:checked={checked_group1} /> 
+                    <label for="group1"> Team Sports </label>
+                    <div class="tooltip tooltip-right">
+                        <ul class="list_tool">
+                            <li>Football</li><li>Handball</li><li>Hockey</li><li>Ice Hockey</li><li>Rugby Sevens</li>
+                            <li>Water Polo</li><li>Lacrosse</li><li>Basketball</li><li>Volleyball</li><li>Rugby</li>
+                            <li>Softball</li><li>Baseball</li><li>Cricket</li><li>Polo</li><li>Beach Volleyball</li>
+                            <li>Polo</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="text_l uistack tooltipped" style="">
+                    <input type="checkbox" id="group2" bind:checked={checked_group2} /> 
+                    <label for="group2">Racquet Sports 
+                    </label>
+                    <div class="tooltip tooltip-right">
+                        <ul class="list_tool">
+                            <li>Tennis</li><li>Badminton</li><li>Table Tennis</li><li>Croquet</li><li>Jeu De Paume</li>
+                            <li>Racquets</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="text_l uistack tooltipped" style=""><input type="checkbox" id="group3" bind:checked={checked_group3} /> 
+                    <label for="group3">Combat Sports 
+                    </label>
+                    <div class="tooltip tooltip-right">
+                        <ul class="list_tool">
+                            <li>Judo</li><li>Taekwondo</li><li>Boxing</li><li>Wrestling</li><li>Fencing</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="text_l uistack tooltipped" style=""><input type="checkbox" id="group4" bind:checked={checked_group4} /> 
+                    <label for="group4">Water Sports </label>
+                    <div class="tooltip tooltip-right">
+                        <ul class="list_tool">
+                            <li>Sailing</li><li>Swimming</li><li>Diving</li><li>Synchronized Swimming</li><li>Canoeing</li>
+                            <li>Rowing</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="text_l uistack tooltipped" style=""><input type="checkbox" id="group5" bind:checked={checked_group5} /> 
+                    <label for="group5">Winter Sports </label>
+                    <div class="tooltip tooltip-right">
+                        <ul class="list_tool">
+                            <li>Biathlon</li><li>Ski Jumping</li><li>Snowboarding</li><li>Alpine Skiing</li><li>Freestyle Skiing</li>
+                            <li>Cross Country Skiing</li><li>Bobsleigh</li><li>Skeleton</li><li>Luge</li><li>Nordic Combined</li>
+                            <li>Curling</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="text_l uistack tooltipped" style="">
+                    <input type="checkbox" id="group6" bind:checked={checked_group6} /> 
+                    <label for="group6">Track and Field Sports</label>
+                    <div class="tooltip tooltip-right">
+                        <ul class="list_tool">
+                            <li>Athletics</li><li>Weightlifting</li><li>Triathlon</li><li>Cycling</li><li>Speed Skating</li>
+                            <li>Short Track Speed Skating</li><li>Modern Pentathlon</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="text_l uistack tooltipped" style=""><input type="checkbox" id="group7" bind:checked={checked_group7} /> 
+                    <label for="group7">Gymnastics and Acrobatic Sports</label>  
+                    <div class="tooltip tooltip-right">
+                        <ul class="list_tool">
+                            <li>Gymnastics</li><li>Rhythmic Gymnastics</li><li>Trampolining</li><li>Figure Skating</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="text_l uistack tooltipped" style=""><input type="checkbox" id="group8" bind:checked={checked_group8} /> 
+                    <label for="group8">Remaining Sports </label>
+                    <div class="tooltip tooltip-right">
+                        <ul class="list_tool">
+                            <li>Art Competitions</li><li>Military Ski Patrol</li><li>Alpinism</li><li>Tug-Of-War</li><li>Motorboating</li>
+                            <li>Basque Pelota</li><li>Roque</li><li>Golf</li><li>Archery</li><li>Shooting</li>
+                            <li>Equestrianism</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
         <div  class="text_l sidebar" style="border: none">
@@ -1029,6 +1098,7 @@
 
     :global(body) {
         background-color: rgb(233, 233, 233);
+        font-family: sans-serif;
     }
     .grid-container > div {/* div elements of the grid */
         background-color: rgb(233, 233, 233);
@@ -1040,5 +1110,71 @@
         border-color: greenyellow;
     }
 
+    .tooltipped{
+        position: relative;
+    }
+
+    .tooltipped .tooltip{
+        position: absolute;
+        visibility: hidden;
+        opacity: 0;
+        z-index: 1;
+        background-color: #00000038;
+        color: white;
+        border-radius: 7px;
+        padding: 7px;
+        backdrop-filter: blur(10px);
+        transition: all 0.25s;
+        font-weight: 300;
+    }
+    .tooltipped .tooltip.tooltip-right{
+        /*top: 0;
+        left: 100%;
+        min-height: 100%;*/
+        top: 100%;
+        left: 30%;
+        width: 70%;
+        border-top-left-radius: 0;
+    }
+    .tooltipped .tooltip.tooltip-bottom{
+        top: 100%;
+        left: 0;
+        min-width: 100%;
+    }
+    .tooltipped:hover .tooltip{
+        opacity: 1;
+        visibility: visible;
+    }
+    .list_tool {
+        margin: 0px;
+        padding: 0 0 0 16px;
+        
+    }
+    .list_tool > li {
+        /*margin-left: -15%;
+        margin-top: -12%;
+        margin-bottom: 0%;*/
+        margin: 0;
+        padding: 0;
+        line-height: 1em;
+    }
+
+    label{
+        display:inline-block;
+        word-wrap: break-word;
+    }
+    .uistack{
+        display: flex;
+        width: 100%;
+        box-sizing: border-box;
+        gap: 7px;
+    }
+    .uistack input{
+        align-self: flex-start;
+
+    }
+    .uistack label{
+        flex-grow: 1;
+    }
 </style>
 
