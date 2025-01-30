@@ -499,9 +499,9 @@
     "#FF9966", // Slightly darker Light Coral
     "#D18CFF"  // Slightly darker Light Violet
     ]
-    let men_color = bot_color[2];
-    let women_color = bot_color[0];
-    let comp_color = bot_color[6];
+    let men_color = "#6A8BBE";
+    let women_color = "#E07B7B";
+    let comp_color = "#7B9FD1";
     let grey_color = "grey";
     //console.log(filetered_data.get("bottom").get(1+""))
 
@@ -518,6 +518,8 @@
         
         return res
     }
+
+    let top_l_list = ["best_abs", "best_rel", "worst_abs", "worst_rel"]
     
 </script>
 
@@ -536,8 +538,13 @@
     <div class="item1" style=""><!-- left -->
         <div class="sidebar">
             <div class="text_l" style="margin: 3px;">
-                <div style="text-align: center; margin-bottom: 0.5sem;">
-                    Select the Sports Groups:
+                <div class="uistack tooltipped">
+                    <div style="text-align: center; margin-bottom: 0.5sem;">
+                        Select the Sports Groups: (*)
+                    </div>
+                    <div class="tooltip tooltip-right">
+                        only works for the podiums
+                    </div>
                 </div>
                 <div class="text_l uistack tooltipped" style="">
                     <input type="checkbox" id="group1" bind:checked={checked_group1} /> 
@@ -622,7 +629,7 @@
         </div>
         <div  class="text_l sidebar" style="border: none">
             <div class="left_stats">
-                Number of Elements: <br>
+                Number of Appearances: <br>
                 {filetered_data.get("filtered").length} / 70000
             </div>
             <div class="left_stats">
@@ -664,19 +671,40 @@
         </div>
     </div><!-- end left -->
     <div class="item2"><!-- topL -->
+        {#each [1,2] as row}
         <div style="height: 49%; width: 100%; padding: 3px; font-size: 17px; font-weight: bold; ">
             <div class="heading" style="">
-                Best Nations:
+                {#if row == 1}
+                Nations winning the most medals:
+                {:else}
+                Nations winning the least medals:
+                {/if}
             </div>
             <div class="top_pic" style="">
-                Absolute:<br>
+                {#each [1,2] as col}
+                    <div style="height: 3em;">
+                        
+                    </div>
+                    
+                {/each}
+            </div>
+        </div>
+        {/each}
+
+
+        <!-- <div style="height: 49%; width: 100%; padding: 3px; font-size: 17px; font-weight: bold; ">
+            <div class="heading" style="">
+                Nations winning the most medals:
+            </div>
+            <div class="top_pic" style="">
+                Total:<br>
                 <img class="podium" src="images/best_podium.png" style="width: 95%;" alt="medal" />
                 <div style="position: absolute; left: 43%; bottom: 55%;"> {filetered_data.get("top_l").get("best_abs")[0] ?? 0}</div>
                 <div style="position: absolute; left: 12%; bottom: 41%;"> {filetered_data.get("top_l").get("best_abs")[1] ?? 0}</div>
                 <div style="position: absolute; left: 73%; bottom: 35%;"> {filetered_data.get("top_l").get("best_abs")[2] ?? 0}</div>
             </div>
             <div class="top_pic" style="">
-                Relative:<br>
+                Relative to the number of participants:<br>
                 <img class="podium" src="images/best_podium.png" style="width: 95%;" alt="medal" />
                 <div style="position: absolute; left: 43%; bottom: 55%;"> {filetered_data.get("top_l").get("best_rel")[0] ?? 0}</div>
                 <div style="position: absolute; left: 12%; bottom: 41%;"> {filetered_data.get("top_l").get("best_rel")[1] ?? 0}</div>
@@ -685,23 +713,23 @@
         </div>
         <div style="height: 49%; width: 100%; padding: 3px; font-size: 17px; font-weight: bold;">
             <div class="heading" style="padding: 1%">
-                Worst Nations:
+                Nations winning the least medals:
             </div>
             <div class="top_pic" style="">
-                Absolute:<br>
+                Total:<br>
                 <img class="podium2" src="images/worst_podium.png" style="width: 95%;" alt="medal" />
                 <div style="position: absolute; left: 43%; bottom: 22%;"> {filetered_data.get("top_l").get("worst_abs")[0] ?? 0}</div>
                 <div style="position: absolute; left: 12%; bottom: 41%;"> {filetered_data.get("top_l").get("worst_abs")[1] ?? 0}</div>
                 <div style="position: absolute; left: 73%; bottom: 35%;"> {filetered_data.get("top_l").get("worst_abs")[2] ?? 0}</div>
             </div>
             <div class="top_pic" style="">
-                Relative:<br>
+                Relative to the number of participants:<br>
                 <img class="podium2" src="images/worst_podium.png" style="width: 95%;" alt="medal" />
                 <div style="position: absolute; left: 43%; bottom: 22%;"> {filetered_data.get("top_l").get("worst_rel")[0] ?? 0}</div>
                 <div style="position: absolute; left: 12%; bottom: 41%;"> {filetered_data.get("top_l").get("worst_rel")[1] ?? 0}</div>
                 <div style="position: absolute; left: 73%; bottom: 35%;"> {filetered_data.get("top_l").get("worst_rel")[2] ?? 0}</div>
             </div>
-        </div>
+        </div> -->
     </div><!-- topL -->
     <div class="item3"><!-- topM -->
         <div class="top_m_sports heading" style="margin: 0.7%;">
@@ -852,19 +880,24 @@
             <line class="axis" id="y" x1="{l_bottom_scale_x(0)}%" y1="{bottom_scale_y(-0.04)}%" x2="{l_bottom_scale_x(0)}%" y2="{bottom_scale_y(1.025)}%" />
 
             {#each bot_ticks as i}
-                <line class="tick" y1="{bottom_scale_y(-0.02)}%" y2="{bottom_scale_y(0.02)}%" x1="{l_bottom_scale_x(i+1)}%" x2="{l_bottom_scale_x(i+1)}%" />
+                <line class="tick" y1="{bottom_scale_y(-0.03)}%" y2="{bottom_scale_y(0.0)}%" x1="{l_bottom_scale_x(i+1)}%" x2="{l_bottom_scale_x(i+1)}%" />
 
                 <line class="bar" style="stroke: {women_color};" y1="{bottom_scale_y(0)}%" y2="{bottom_scale_y(filetered_data.get("bottom").get("w")[i] / filetered_data.get("bottom").get("max"))}%" 
-                        x1="{l_bottom_scale_x(i+1.2)}%" x2="{l_bottom_scale_x(i+1.2)}%" />
+                        x1="{l_bottom_scale_x(i+1.17)}%" x2="{l_bottom_scale_x(i+1.17)}%" />
                 <line class="bar" style="stroke: {men_color};" y1="{bottom_scale_y(0)}%" y2="{bottom_scale_y(filetered_data.get("bottom").get("m")[i] / filetered_data.get("bottom").get("max"))}%" 
-                        x1="{l_bottom_scale_x(i+0.8)}%" x2="{l_bottom_scale_x(i+0.8)}%" />
+                        x1="{l_bottom_scale_x(i+0.83)}%" x2="{l_bottom_scale_x(i+0.83)}%" />
 
 
 
-                <text x="{l_bottom_scale_x(i+1.2)}%" y="{bottom_scale_y(-0.02)}%" style="writing-mode: vertical-rl;">
+                <!-- <text x="{l_bottom_scale_x(i+1.2)}%" y="{bottom_scale_y(-0.02)}%" style="writing-mode: vertical-rl;">
                     {filetered_data.get("bottom").get("x")[i].substring(0,8) + " -"}</text>
                 <text x="{l_bottom_scale_x(i+0.8)}%" y="{bottom_scale_y(-0.02)}%" style="writing-mode: vertical-rl;">
-                    {filetered_data.get("bottom").get("x")[i].split("-")[1].substring(0,9)}</text>
+                    {filetered_data.get("bottom").get("x")[i].split("-")[1].substring(0,9)}</text> -->
+
+                <text x="{l_bottom_scale_x(i+0.95)}%" y="{bottom_scale_y(-0.04)}%" style="writing-mode: sideways-lr;">
+                    {filetered_data.get("bottom").get("x")[i].substring(5,6) + "" + filetered_data.get("bottom").get("x")[i].substring(0,4) + " –"}</text>
+                <text x="{l_bottom_scale_x(i+1.31)}%" y="{bottom_scale_y(-0.09)}%" style="writing-mode: sideways-lr;">
+                    {filetered_data.get("bottom").get("x")[i].substring(5,6) + "" + filetered_data.get("bottom").get("x")[i].split("-")[1].substring(1,5) + ""}</text>
             {/each}
 
             {#each [0.2,0.4,0.6,0.8,1] as i}
@@ -882,7 +915,7 @@
             <line class="axis" id="y" x1="{bottom_scale_x(0)}%" y1="{bottom_scale_y(-0.04)}%" x2="{bottom_scale_x(0)}%" y2="{bottom_scale_y(1.025)}%" />
 
             {#each bot_ticks as i}
-                <line class="tick" y1="{bottom_scale_y(-0.02)}%" y2="{bottom_scale_y(0.02)}%" x1="{bottom_scale_x(i+1)}%" x2="{bottom_scale_x(i+1)}%" />
+                <line class="tick" y1="{bottom_scale_y(-0.03)}%" y2="{bottom_scale_y(0.0)}%" x1="{bottom_scale_x(i+1)}%" x2="{bottom_scale_x(i+1)}%" />
 
                 {#each [1,2,3,4,5,6,7,8] as group}
                     {#if group == 1}
@@ -894,10 +927,10 @@
                     {/if}
                 {/each}
 
-                <text x="{bottom_scale_x(i+1.2)}%" y="{bottom_scale_y(-0.02)}%" style="writing-mode: vertical-rl;">
-                    {filetered_data.get("bottom").get("x")[i].substring(0,8) + " -"}</text>
-                <text x="{bottom_scale_x(i+0.8)}%" y="{bottom_scale_y(-0.02)}%" style="writing-mode: vertical-rl;">
-                    {filetered_data.get("bottom").get("x")[i].split("-")[1].substring(0,9)}</text>
+                <text x="{bottom_scale_x(i+0.95)}%" y="{bottom_scale_y(-0.04)}%" style="writing-mode: sideways-lr;">
+                    {filetered_data.get("bottom").get("x")[i].substring(5,6) + "" + filetered_data.get("bottom").get("x")[i].substring(0,4) + " –"}</text>
+                <text x="{bottom_scale_x(i+1.35)}%" y="{bottom_scale_y(-0.09)}%" style="writing-mode: sideways-lr;">
+                    {filetered_data.get("bottom").get("x")[i].substring(5,6) + "" + filetered_data.get("bottom").get("x")[i].split("-")[1].substring(1,5) + ""}</text>
             {/each}
 
             {#each [1,2,3,4,5,6,7,8] as group}<!-- labels right to plot -->
