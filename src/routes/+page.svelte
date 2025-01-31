@@ -103,7 +103,7 @@
 
         in_data.get("filtered").forEach((element:any) => {
             if (check_type(element)){
-                l_num.set(element.NOC, (l_num.get(element.NOC) ?? 0) +1);
+                l_num.set(element.NOC, {num: (l_num.get(element.NOC) ?? 0) +1, coun: element.Team});
             }
 
             if (element.Age > 0 && element.Weight > 0 && element.Height > 0){
@@ -149,21 +149,26 @@
         let sort_abs :any[]= []
         let sort_rel:any[] = []
         keyset.forEach((element) => {
-            let num = l_num.get(element);
+            let num = l_num.get(element).num;
             let med = l_med.get(element) ?? 0;
             let rel = med / num;
 
-            sort_abs.push({num: med, nat: element});
-            sort_rel.push({num: rel, nat: element});
+            if (med > 0){
+                sort_abs.push({num: med, nat: element, coun: l_num.get(element).coun});
+                sort_rel.push({num: rel, nat: element, coun: l_num.get(element).coun});
+            }
         })
         sort_abs.sort((a,b) => b.num - a.num)
         sort_rel.sort((a,b) => b.num - a.num)
+       
 
-        top_l.set("best_rel", [sort_rel[0].nat, sort_rel[1].nat, sort_rel[2].nat])
-        top_l.set("best_abs", [sort_abs[0].nat, sort_abs[1].nat, sort_abs[2].nat])
+        console.log(sort_abs)
+
+        top_l.set("best_rel", [sort_rel[0], sort_rel[1], sort_rel[2]])
+        top_l.set("best_abs", [sort_abs[0], sort_abs[1], sort_abs[2]])
         let len = sort_abs.length - 1
-        top_l.set("worst_rel", [sort_rel[len - 0].nat, sort_rel[len - 1].nat, sort_rel[len - 2].nat])
-        top_l.set("worst_abs", [sort_abs[len - 0].nat, sort_abs[len - 1].nat, sort_abs[len - 2].nat])
+        top_l.set("worst_rel", [sort_rel[len - 0], sort_rel[len - 1], sort_rel[len - 2]])
+        top_l.set("worst_abs", [sort_abs[len - 0], sort_abs[len - 1], sort_abs[len - 2]])
 
 
 
@@ -519,7 +524,11 @@
         return res
     }
 
-    let top_l_list = ["best_abs", "best_rel", "worst_abs", "worst_rel"]
+    let top_l_map_list = ["best_abs", "best_rel", "worst_abs", "worst_rel"];
+    let top_l_pod_list = ["best_podium.png", "worst_podium.png"];
+    let top_l_x = [43, 12, 75];
+    let top_l_y = [[85, 71, 65], [35, 51, 59]];
+    
     
 </script>
 
@@ -672,23 +681,38 @@
     </div><!-- end left -->
     <div class="item2"><!-- topL -->
         {#each [1,2] as row}
-        <div style="height: 49%; width: 100%; padding: 3px; font-size: 17px; font-weight: bold; ">
-            <div class="heading" style="">
-                {#if row == 1}
-                Nations winning the most medals:
-                {:else}
-                Nations winning the least medals:
-                {/if}
-            </div>
-            <div class="top_pic" style="">
+            <div style="height: 49%; width: 100%; padding: 3px; font-size: 17px; font-weight: bold; ">
+                <div class="heading" style="">
+                    {#if row == 1}
+                    Nations winning the most medals:
+                    {:else}
+                    Nations winning the least medals:
+                    {/if}
+                </div>
                 {#each [1,2] as col}
-                    <div style="height: 3em;">
-                        
+                    <div class="top_pic" style="padding: 5px">
+                        <div style="height: 3em;">
+                            {#if col == 1}
+                            Total:
+                            {:else}
+                            Per Participant:
+                            {/if}
+                        </div>
+                        <div style="width: 99%; height: 80%; position: absolute;">
+                            <img class="podium{row}" src="images/{top_l_pod_list[row-1]}" style="width: 95%;" alt="medal" />
+                            {#each [0,1,2] as place}
+                            <div class="uistack tooltipped" style="position: absolute; left: {top_l_x[place]}%; bottom: {top_l_y[row-1][place]}%;"> 
+                                {filetered_data.get("top_l").get(top_l_map_list[((row-1)*2)+col-1])[place].nat ?? 0}
+                                <div class="tooltip tooltip-right" style="top: 1em; left: 1em;">
+                                    <img style="width: 2em; height: 1em;" src="images/flags/{(filetered_data.get("top_l").get(top_l_map_list[((row-1)*2)+col-1])[place].coun)}.png" alt="flag"/>
+                                    {filetered_data.get("top_l").get(top_l_map_list[((row-1)*2)+col-1])[place].coun ?? 0}
+                                </div>
+                            </div>
+                            {/each}
+                        </div>
                     </div>
-                    
                 {/each}
             </div>
-        </div>
         {/each}
 
 
@@ -1111,15 +1135,15 @@
         margin-right: 5%;
     }
 
-    .podium {
+    .podium1 {
         position: absolute;
-        bottom: 0.7em;
+        bottom: 2em;
         left: 0.45em;
     }
 
     .podium2 {
         position: absolute;
-        top: 2em;
+        top: -1em;
         left: 0.45em;
     }
 
