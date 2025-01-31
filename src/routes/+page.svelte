@@ -536,7 +536,7 @@
 
 
 <div style="margin-bottom: 10px;">
-    <text style="font-size: 30px;font-weight: bold;">Olympic Data</text>
+    <text style="font-size: 30px;font-weight: bold;">Overview over the Olympic History</text>
     <text style="margin-left: 20px;">Source: 
         <a href="https://www.kaggle.com/datasets/bhanupratapbiswas/olympic-data">Kaggle</a></text>
     <text style="margin-left: 20px;"><a href="./oldDraft">Old Page</a></text>
@@ -714,46 +714,6 @@
                 {/each}
             </div>
         {/each}
-
-
-        <!-- <div style="height: 49%; width: 100%; padding: 3px; font-size: 17px; font-weight: bold; ">
-            <div class="heading" style="">
-                Nations winning the most medals:
-            </div>
-            <div class="top_pic" style="">
-                Total:<br>
-                <img class="podium" src="images/best_podium.png" style="width: 95%;" alt="medal" />
-                <div style="position: absolute; left: 43%; bottom: 55%;"> {filetered_data.get("top_l").get("best_abs")[0] ?? 0}</div>
-                <div style="position: absolute; left: 12%; bottom: 41%;"> {filetered_data.get("top_l").get("best_abs")[1] ?? 0}</div>
-                <div style="position: absolute; left: 73%; bottom: 35%;"> {filetered_data.get("top_l").get("best_abs")[2] ?? 0}</div>
-            </div>
-            <div class="top_pic" style="">
-                Relative to the number of participants:<br>
-                <img class="podium" src="images/best_podium.png" style="width: 95%;" alt="medal" />
-                <div style="position: absolute; left: 43%; bottom: 55%;"> {filetered_data.get("top_l").get("best_rel")[0] ?? 0}</div>
-                <div style="position: absolute; left: 12%; bottom: 41%;"> {filetered_data.get("top_l").get("best_rel")[1] ?? 0}</div>
-                <div style="position: absolute; left: 73%; bottom: 35%;"> {filetered_data.get("top_l").get("best_rel")[2] ?? 0}</div>
-            </div>
-        </div>
-        <div style="height: 49%; width: 100%; padding: 3px; font-size: 17px; font-weight: bold;">
-            <div class="heading" style="padding: 1%">
-                Nations winning the least medals:
-            </div>
-            <div class="top_pic" style="">
-                Total:<br>
-                <img class="podium2" src="images/worst_podium.png" style="width: 95%;" alt="medal" />
-                <div style="position: absolute; left: 43%; bottom: 22%;"> {filetered_data.get("top_l").get("worst_abs")[0] ?? 0}</div>
-                <div style="position: absolute; left: 12%; bottom: 41%;"> {filetered_data.get("top_l").get("worst_abs")[1] ?? 0}</div>
-                <div style="position: absolute; left: 73%; bottom: 35%;"> {filetered_data.get("top_l").get("worst_abs")[2] ?? 0}</div>
-            </div>
-            <div class="top_pic" style="">
-                Relative to the number of participants:<br>
-                <img class="podium2" src="images/worst_podium.png" style="width: 95%;" alt="medal" />
-                <div style="position: absolute; left: 43%; bottom: 22%;"> {filetered_data.get("top_l").get("worst_rel")[0] ?? 0}</div>
-                <div style="position: absolute; left: 12%; bottom: 41%;"> {filetered_data.get("top_l").get("worst_rel")[1] ?? 0}</div>
-                <div style="position: absolute; left: 73%; bottom: 35%;"> {filetered_data.get("top_l").get("worst_rel")[2] ?? 0}</div>
-            </div>
-        </div> -->
     </div><!-- topL -->
     <div class="item3"><!-- topM -->
         <div class="top_m_sports heading" style="margin: 0.7%;">
@@ -764,37 +724,7 @@
             {#each [1,2,3] as col}
             <div class="mid_pic" style="">
                 {#if row == 2 && col == 2}
-                <!-- <div class="top_m_sports">Legend</div> -->
                 <svg class="" style="margin-top: 3px; left: 3px; position: absolute; transform: translate(-5%, 5%); font-size: 12px;" height="98%" width="98%">
-
-                    <rect style="fill:{scale_top_m_color(0.5)}; width:30%; height:45%; z-index: -50;top:80%;left: 20%;" x="21%" y="33.5%" />
-                    
-                    <!-- height --><!-- weight -->
-                     <line class="axis" x1="20%" x2="20%" y1="15%" y2="85%"/> 
-                     <line class="axis" x1="15%" x2="65%" y1="80%" y2="80%"/> 
-                     <text x="3%" y="10%" style="font-size: 12px;">height in cm</text>
-                     <text x="68%" y="82%" style="font-size: 12px;">weight</text>
-                     <text x="68%" y="92%" style="font-size: 12px;">in kg</text>
-
-                     <line class="tick" x1="60%" x2="60%" y1="78%" y2="82%" />
-                     <text x="55%" y="93%" style="font-size: 12px;">{(""+filetered_data.get("top_m_stat").get("wei_max")).split(".")[0]}</text>
-                     <line class="tick" x1="40%" x2="40%" y1="78%" y2="82%" />
-                     <text x="35%" y="93%" style="font-size: 12px;">{(""+filetered_data.get("top_m_stat").get("wei_min")).split(".")[0]}</text>
-
-                     <line class="tick" x1="18%" x2="22%" y1="50%" y2="50%" />
-                     <text x="4%" y="54%" style="font-size: 12px;">{(""+filetered_data.get("top_m_stat").get("hei_min")).split(".")[0]}</text>
-                     <line class="tick" x1="18%" x2="22%" y1="20%" y2="20%" />
-                     <text x="4%" y="24%" style="font-size: 12px;">{(""+filetered_data.get("top_m_stat").get("hei_max")).split(".")[0]}</text>
-
-                    
-
-                    
-                    
-                    <!-- age -->
-                    <!-- <text x="30%" y="28%" style="font-size: 12px;">The colors' border</text>
-                    <text x="30%" y="38%" style="font-size: 12px;">signal the age:</text>
-                    <text x="30%" y="48%" style="font-size: 12px;">top: {(""+filetered_data.get("top_m_stat").get("age_min")).split(".")[0]}</text>
-                    <text x="30%" y="58%" style="font-size: 12px;">bottom: {(""+filetered_data.get("top_m_stat").get("age_max")).split(".")[0]}</text> -->
 
                     <text x="70%" y="11%" style="">Age:</text>
                     <rect style="height: 1em; width:1em; fill: {scale_top_m_color(0)}" x="70%" y="21%" />
@@ -803,7 +733,8 @@
                     <text x="80%" y="50.5%" style="">{(""+filetered_data.get("top_m_stat").get("age_max")).split(".")[0]}</text>
                     
                 </svg>
-                <img src="images/top_m_man.png" style="position:absolute; width:30%; height:45%; z-index: 50;bottom:15%;left: 17.5%;" alt=""/>
+                
+                 <img src="images/top_m_leg.png" style="position:absolute; width:60%; height:80%; z-index: 50;bottom:15%;left: 17.5%;" alt="legend" />
                 {:else}
                 
                 <div class="top_m_sports">{filetered_data.get("top_m").get(transform_top_m(row, col) +"").get("sport")}</div>
@@ -829,7 +760,7 @@
     <div class="item4"><!-- topR -->
         <div class="top_r_outer" style="">
             <div class="heading" style="margin-bottom: 1%;">
-                Best Sports to get medals:
+                Most Medals per Participant:
             </div>
             <div class="top_pic" style="">
                 <div style="font-weight: bold; margin-top: 3%;">For women:</div>
@@ -906,10 +837,14 @@
             {#each bot_ticks as i}
                 <line class="tick" y1="{bottom_scale_y(-0.03)}%" y2="{bottom_scale_y(0.0)}%" x1="{l_bottom_scale_x(i+1)}%" x2="{l_bottom_scale_x(i+1)}%" />
 
-                <line class="bar" style="stroke: {women_color};" y1="{bottom_scale_y(0)}%" y2="{bottom_scale_y(filetered_data.get("bottom").get("w")[i] / filetered_data.get("bottom").get("max"))}%" 
-                        x1="{l_bottom_scale_x(i+1.17)}%" x2="{l_bottom_scale_x(i+1.17)}%" />
-                <line class="bar" style="stroke: {men_color};" y1="{bottom_scale_y(0)}%" y2="{bottom_scale_y(filetered_data.get("bottom").get("m")[i] / filetered_data.get("bottom").get("max"))}%" 
-                        x1="{l_bottom_scale_x(i+0.83)}%" x2="{l_bottom_scale_x(i+0.83)}%" />
+                {#if !isNaN(filetered_data.get("bottom").get("w")[i]) && filetered_data.get("bottom").get("w")[i] != 0}
+                    <line class="bar" style="stroke: {women_color};" y1="{bottom_scale_y(0)}%" y2="{bottom_scale_y(filetered_data.get("bottom").get("w")[i] / filetered_data.get("bottom").get("max"))}%" 
+                            x1="{l_bottom_scale_x(i+1.17)}%" x2="{l_bottom_scale_x(i+1.17)}%" />
+                {/if}
+                {#if !isNaN(filetered_data.get("bottom").get("m")[i]) && filetered_data.get("bottom").get("m")[i] != 0}
+                    <line class="bar" style="stroke: {men_color};" y1="{bottom_scale_y(0)}%" y2="{bottom_scale_y(filetered_data.get("bottom").get("m")[i] / filetered_data.get("bottom").get("max"))}%" 
+                            x1="{l_bottom_scale_x(i+0.83)}%" x2="{l_bottom_scale_x(i+0.83)}%" />
+                {/if}
 
 
 
@@ -918,10 +853,12 @@
                 <text x="{l_bottom_scale_x(i+0.8)}%" y="{bottom_scale_y(-0.02)}%" style="writing-mode: vertical-rl;">
                     {filetered_data.get("bottom").get("x")[i].split("-")[1].substring(0,9)}</text> -->
 
+                {#if !filetered_data.get("bottom").get("x")[i].startsWith("undefined") && filetered_data.get("bottom").get("x")[i] != ""}
                 <text x="{l_bottom_scale_x(i+0.95)}%" y="{bottom_scale_y(-0.04)}%" style="writing-mode: sideways-lr;">
                     {filetered_data.get("bottom").get("x")[i].substring(5,6) + "" + filetered_data.get("bottom").get("x")[i].substring(0,4) + " –"}</text>
                 <text x="{l_bottom_scale_x(i+1.31)}%" y="{bottom_scale_y(-0.09)}%" style="writing-mode: sideways-lr;">
                     {filetered_data.get("bottom").get("x")[i].substring(5,6) + "" + filetered_data.get("bottom").get("x")[i].split("-")[1].substring(1,5) + ""}</text>
+                {/if}
             {/each}
 
             {#each [0.2,0.4,0.6,0.8,1] as i}
@@ -939,22 +876,27 @@
             <line class="axis" id="y" x1="{bottom_scale_x(0)}%" y1="{bottom_scale_y(-0.04)}%" x2="{bottom_scale_x(0)}%" y2="{bottom_scale_y(1.025)}%" />
 
             {#each bot_ticks as i}
-                <line class="tick" y1="{bottom_scale_y(-0.03)}%" y2="{bottom_scale_y(0.0)}%" x1="{bottom_scale_x(i+1)}%" x2="{bottom_scale_x(i+1)}%" />
-
                 {#each [1,2,3,4,5,6,7,8] as group}
-                    {#if group == 1}
-                        <line class="bar" style="stroke: {bot_color[group-1]};" y1="{bottom_scale_y(0)}%" y2="{bottom_scale_y(filetered_data.get("bottom").get(group+"")[i])}%" 
-                        x1="{bottom_scale_x(i+1)}%" x2="{bottom_scale_x(i+1)}%" />
-                    {:else}
-                        <line class="bar" style="stroke: {bot_color[group-1]};" y1="{bottom_scale_y(filetered_data.get("bottom").get((group-1)+"")[i])}%" 
-                        y2="{bottom_scale_y(filetered_data.get("bottom").get(group+"")[i])}%" x1="{bottom_scale_x(i+1)}%" x2="{bottom_scale_x(i+1)}%" />
+                    {#if !isNaN(filetered_data.get("bottom").get(group+"")[i]) && filetered_data.get("bottom").get(group+"")[i] != 0}
+                        {#if group == 1}
+                            <line class="bar" style="stroke: {bot_color[group-1]};" y1="{bottom_scale_y(0)}%" y2="{bottom_scale_y(filetered_data.get("bottom").get(group+"")[i])}%" 
+                            x1="{bottom_scale_x(i+1)}%" x2="{bottom_scale_x(i+1)}%" />
+                        {:else}
+                            <line class="bar" style="stroke: {bot_color[group-1]};" y1="{bottom_scale_y(filetered_data.get("bottom").get((group-1)+"")[i])}%" 
+                            y2="{bottom_scale_y(filetered_data.get("bottom").get(group+"")[i])}%" x1="{bottom_scale_x(i+1)}%" x2="{bottom_scale_x(i+1)}%" />
+                        {/if}
                     {/if}
                 {/each}
 
+                <!-- x tick -->
+                <line class="tick" y1="{bottom_scale_y(-0.03)}%" y2="{bottom_scale_y(0.0)}%" x1="{bottom_scale_x(i+1)}%" x2="{bottom_scale_x(i+1)}%" />
+
+                {#if !filetered_data.get("bottom").get("x")[i].startsWith("undefined") && filetered_data.get("bottom").get("x")[i] != ""}
                 <text x="{bottom_scale_x(i+0.95)}%" y="{bottom_scale_y(-0.04)}%" style="writing-mode: sideways-lr;">
                     {filetered_data.get("bottom").get("x")[i].substring(5,6) + "" + filetered_data.get("bottom").get("x")[i].substring(0,4) + " –"}</text>
                 <text x="{bottom_scale_x(i+1.35)}%" y="{bottom_scale_y(-0.09)}%" style="writing-mode: sideways-lr;">
                     {filetered_data.get("bottom").get("x")[i].substring(5,6) + "" + filetered_data.get("bottom").get("x")[i].split("-")[1].substring(1,5) + ""}</text>
+                {/if}
             {/each}
 
             {#each [1,2,3,4,5,6,7,8] as group}<!-- labels right to plot -->
@@ -963,7 +905,7 @@
                 <text x="{bottom_scale_x(bot_num_x_ticks+1.5)}%" y="{bottom_scale_y(1 - ((9-group) * 0.1))}%">{sports_types.get(group+"")}</text>
             {/each}
 
-            {#each [0.2,0.4,0.6,0.8,1] as i}
+            {#each [0.2,0.4,0.6,0.8,1] as i}<!-- y ticks -->
                 <line class="tick" y1="{bottom_scale_y(i)}%" y2="{bottom_scale_y(i)}%" x1="{bottom_scale_x(-0.15)}%" x2="{bottom_scale_x(0.15)}%" />
                 <text x="{bottom_scale_x(-1.2)}%" y="{bottom_scale_y(i)+1.3}%" style="font-size: 13px;">{i*100}%</text>
             {/each}
