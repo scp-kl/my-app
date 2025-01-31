@@ -632,7 +632,7 @@
         </div>
         <div  class="text_l sidebar" style="border: none">
             <div class="left_stats">
-                Number of Appearances: <br>
+                Participant Appearances: <br>
                 {filetered_data.get("filtered").length} / 70000
             </div>
             <div class="left_stats">
