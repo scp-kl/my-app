@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { splitString } from '@unovis/ts';
+
 	//import { LOGNAME } from '$env/static/private';
     
     const { data } = $props();
@@ -246,7 +248,7 @@
                 let w_med = r_w_med.get(element) ?? 0;
                 w_score = w_med / w_num;
             }
-            woman.push({"group": gr, "score": w_score})
+            woman.push({"group": gr, "score": w_score, "number": element})
 
             let m_score = 0;
             let m_num = r_m_num.get(element) ?? 0;
@@ -254,7 +256,7 @@
                 let m_med = r_m_med.get(element) ?? 0;
                 m_score = m_med / m_num;
             }
-            men.push({"group": gr, "score": m_score})
+            men.push({"group": gr, "score": m_score, "number": element})
 
             let a_score = 0;
             let a_num = r_num.get(element) ?? 0;
@@ -262,17 +264,17 @@
                 let a_med = r_age.get(element) ?? 0;
                 a_score = a_med / a_num;
             }
-            age.push({"group": gr, "score": a_score})
+            age.push({"group": gr, "score": a_score, "number": element})
         })
         woman.sort((a,b) => b.score - a.score)
         men.sort((a,b) => b.score - a.score)
         age.sort((a,b) => b.score - a.score)
 
-        top_r.set("women", [woman[0].group, woman[1].group, woman[2].group])
-        top_r.set("men", [men[0].group, men[1].group, men[2].group])
-        top_r.set("old", [age[0].group, age[1].group, age[2].group])
+        top_r.set("women", [woman[0], woman[1], woman[2]])
+        top_r.set("men", [men[0], men[1], men[2]])
+        top_r.set("old", [age[0], age[1], age[2]])
         len = age.length - 1
-        top_r.set("young", [age[len].group, age[len - 1].group, age[len - 2].group])
+        top_r.set("young", [age[len], age[len - 1], age[len - 2]])
 
         //console.log(top_r)
 
@@ -528,6 +530,10 @@
     let top_l_pod_list = ["best_podium.png", "worst_podium.png"];
     let top_l_x = [43, 12, 75];
     let top_l_y = [[85, 71, 65], [35, 51, 59]];
+
+    let top_r_cat = [["women", "men"], ["old", "young"]]
+    let top_r_name = [["women", "men"], ["old athletes", "young athletes"]]
+    let medals = ["gold", "silver", "bronze"]
     
     
 </script>
@@ -602,7 +608,7 @@
                         <ul class="list_tool">
                             <li>Biathlon</li><li>Ski Jumping</li><li>Snowboarding</li><li>Alpine Skiing</li><li>Freestyle Skiing</li>
                             <li>Cross Country Skiing</li><li>Bobsleigh</li><li>Skeleton</li><li>Luge</li><li>Nordic Combined</li>
-                            <li>Curling</li>
+                            <li>Curling</li><li>Military Ski Patrol</li>
                         </ul>
                     </div>
                 </div>
@@ -628,7 +634,7 @@
                     <label for="group8">Remaining Sports </label>
                     <div class="tooltip tooltip-right">
                         <ul class="list_tool">
-                            <li>Art Competitions</li><li>Military Ski Patrol</li><li>Alpinism</li><li>Tug-Of-War</li><li>Motorboating</li>
+                            <li>Art Competitions</li><li>Alpinism</li><li>Tug-Of-War</li><li>Motorboating</li>
                             <li>Basque Pelota</li><li>Roque</li><li>Golf</li><li>Archery</li><li>Shooting</li>
                             <li>Equestrianism</li>
                         </ul>
@@ -686,7 +692,7 @@
                     {#if row == 1}
                     Nations winning the most medals:
                     {:else}
-                    Nations winning the least medals:
+                    Nations winning the least medals (but min 1): 
                     {/if}
                 </div>
                 {#each [1,2] as col}
@@ -703,9 +709,9 @@
                             {#each [0,1,2] as place}
                             <div class="uistack tooltipped" style="position: absolute; left: {top_l_x[place]}%; bottom: {top_l_y[row-1][place]}%;"> 
                                 {filetered_data.get("top_l").get(top_l_map_list[((row-1)*2)+col-1])[place].nat ?? 0}
-                                <div class="tooltip tooltip-right" style="top: 1em; left: 1em;">
-                                    <img style="width: 2em; height: 1em;" src="images/flags/{(filetered_data.get("top_l").get(top_l_map_list[((row-1)*2)+col-1])[place].coun)}.png" alt="flag"/>
-                                    {filetered_data.get("top_l").get(top_l_map_list[((row-1)*2)+col-1])[place].coun ?? 0}
+                                <div class="tooltip tooltip-right" style="top: 1em; left: 1em; width:fit-content">
+                                    <img style="width: 2em; height: 1em;" src="images/flags/{(filetered_data.get("top_l").get(top_l_map_list[((row-1)*2)+col-1])[place].coun).split("-")[0]}.png" alt=""/>
+                                    {filetered_data.get("top_l").get(top_l_map_list[((row-1)*2)+col-1])[place].coun.split("-")[0] ?? 0}
                                 </div>
                             </div>
                             {/each}
@@ -737,7 +743,10 @@
                  <img src="images/top_m_leg.png" style="position:absolute; width:60%; height:80%; z-index: 50;bottom:15%;left: 17.5%;" alt="legend" />
                 {:else}
                 
-                <div class="top_m_sports">{filetered_data.get("top_m").get(transform_top_m(row, col) +"").get("sport")}</div>
+                <div class="top_m_sports" >
+                    <text style="border: solid 3px {bot_color[transform_top_m(row, col)-1]}; padding: 2px;">
+                        {filetered_data.get("top_m").get(transform_top_m(row, col) +"").get("sport")}</text>
+                </div>
                 <div class="" style="width: {top_m_wei(filetered_data.get("top_m").get(transform_top_m(row, col) +"").get("wei")) * 20}%;
                     height: {top_m_hei(filetered_data.get("top_m").get(transform_top_m(row, col) +"").get("hei")) * 30}%;
                     margin-left:{(100-(top_m_wei(filetered_data.get("top_m").get(transform_top_m(row, col) +"").get("wei")) * 20))/2}%;
@@ -758,73 +767,32 @@
         {/each}
     </div><!-- end topM -->
     <div class="item4"><!-- topR -->
-        <div class="top_r_outer" style="">
-            <div class="heading" style="margin-bottom: 1%;">
-                Most Medals per Participant:
-            </div>
-            <div class="top_pic" style="">
-                <div style="font-weight: bold; margin-top: 3%;">For women:</div>
-                <div class="top_r_box" style="top: 20%;">
-                    <img class="medals" src="images/gold_medal.png" style="" alt="medal" />
-                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("women")[0]}</text>
-                </div>
-                <div class="top_r_box" style=" top: 40%;">
-                    <img class="medals" src="images/silver_medal.png" style="" alt="medal" />
-                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("women")[1]}</text>
-                </div>
-                <div class="top_r_box" style="top: 60%;">
-                    <img class="medals" src="images/bronze_medal.png" style="" alt="medal" />
-                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("women")[2]}</text>
-                </div>
-            </div>
-            <div class="top_pic" style="">
-                <div style="font-weight: bold; margin-top: 3%;">For men:</div>
-                <div class="top_r_box" style="top: 20%;">
-                    <img class="medals" src="images/gold_medal.png" style="" alt="medal" />
-                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("men")[0]}</text>
-                </div>
-                <div class="top_r_box" style=" top: 40%;">
-                    <img class="medals" src="images/silver_medal.png" style="" alt="medal" />
-                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("men")[1]}</text>
-                </div>
-                <div class="top_r_box" style="top: 60%;">
-                    <img class="medals" src="images/bronze_medal.png" style="" alt="medal" />
-                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("men")[2]}</text>
-                </div>
-            </div>
+        <div class="heading" style="">
+            Most Medals per Participant:
         </div>
-        <div class="top_r_outer" style="">
-            <div class="top_pic" style="">
-                <div style="font-weight: bold; margin-top: 3%;">For old athletes:</div>
-                <div class="top_r_box" style="top: 20%;">
-                    <img class="medals" src="images/gold_medal.png" style="" alt="medal" />
-                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("old")[0]}</text>
-                </div>
-                <div class="top_r_box" style=" top: 40%;">
-                    <img class="medals" src="images/silver_medal.png" style="" alt="medal" />
-                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("old")[1]}</text>
-                </div>
-                <div class="top_r_box" style="top: 60%;">
-                    <img class="medals" src="images/bronze_medal.png" style="" alt="medal" />
-                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("old")[2]}</text>
-                </div>
+        {#each [0,1] as row}
+            <div style="height: 47%; width: 100%; padding: 3px; font-size: 17px; font-weight: bold; ">
+                
+                {#each [0,1] as col}
+                    <div class="top_pic" style="padding: 5px">
+                        <div class="top_m_sports" style="height: 1.5em;">
+                            For {top_r_name[row][col]}:
+                        </div>
+                        <div style="width: 99%; height: 80%; position: absolute;">
+                            {#each [0,1,2] as place}
+                            <div class="top_r_box" style="top: {10 + (25 * (place))}%;">
+                                <img class="medals" src="images/{medals[place]}_medal.png" style="padding-top: 4px;" alt="medal" />
+                                <text class="top_r_text" style="border: solid 3px {bot_color[(filetered_data.get("top_r").get(top_r_cat[row][col])[place]).number - 1]}; 
+                                    padding: 2px;">
+                                    {(filetered_data.get("top_r").get(top_r_cat[row][col])[place]).group} Sport
+                                </text>
+                            </div>
+                            {/each}
+                        </div>
+                    </div>
+                {/each}
             </div>
-            <div class="top_pic" style="">
-                <div style="font-weight: bold; margin-top: 3%;">For young athletes:</div>
-                <div class="top_r_box" style="top: 20%;">
-                    <img class="medals" src="images/gold_medal.png" style="" alt="medal" />
-                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("young")[0]}</text>
-                </div>
-                <div class="top_r_box" style=" top: 40%;">
-                    <img class="medals" src="images/silver_medal.png" style="" alt="medal" />
-                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("young")[1]}</text>
-                </div>
-                <div class="top_r_box" style="top: 60%;">
-                    <img class="medals" src="images/bronze_medal.png" style="" alt="medal" />
-                    <text class="top_r_text" style="">{filetered_data.get("top_r").get("young")[2]}</text>
-                </div>
-            </div>
-        </div>
+        {/each}
     </div><!-- end topR -->
     <div class="item5"><!-- botL -->
         <div class="heading">
@@ -845,13 +813,6 @@
                     <line class="bar" style="stroke: {men_color};" y1="{bottom_scale_y(0)}%" y2="{bottom_scale_y(filetered_data.get("bottom").get("m")[i] / filetered_data.get("bottom").get("max"))}%" 
                             x1="{l_bottom_scale_x(i+0.83)}%" x2="{l_bottom_scale_x(i+0.83)}%" />
                 {/if}
-
-
-
-                <!-- <text x="{l_bottom_scale_x(i+1.2)}%" y="{bottom_scale_y(-0.02)}%" style="writing-mode: vertical-rl;">
-                    {filetered_data.get("bottom").get("x")[i].substring(0,8) + " -"}</text>
-                <text x="{l_bottom_scale_x(i+0.8)}%" y="{bottom_scale_y(-0.02)}%" style="writing-mode: vertical-rl;">
-                    {filetered_data.get("bottom").get("x")[i].split("-")[1].substring(0,9)}</text> -->
 
                 {#if !filetered_data.get("bottom").get("x")[i].startsWith("undefined") && filetered_data.get("bottom").get("x")[i] != ""}
                 <text x="{l_bottom_scale_x(i+0.95)}%" y="{bottom_scale_y(-0.04)}%" style="writing-mode: sideways-lr;">

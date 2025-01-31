@@ -29,10 +29,10 @@ def split_csv_to_groups():
         '3': ['Judo', 'Taekwondo', 'Boxing', 'Wrestling', 'Fencing'],
         '4': ['Sailing', 'Swimming', 'Diving', 'Synchronized Swimming', 'Canoeing', 'Rowing'],
         '5': ['Biathlon', 'Ski Jumping', 'Snowboarding', 'Alpine Skiing', 'Freestyle Skiing', 'Cross Country Skiing', 'Bobsleigh', 'Skeleton', 
-                               'Luge', 'Nordic Combined', 'Curling'],
+                               'Luge', 'Nordic Combined', 'Curling', 'Military Ski Patrol'],
         '6': ['Athletics', 'Weightlifting', 'Triathlon', 'Cycling', 'Speed Skating', 'Short Track Speed Skating', 'Modern Pentathlon'],
         '7': ['Gymnastics', 'Rhythmic Gymnastics', 'Trampolining', 'Figure Skating'],
-        '8': ['Art Competitions', 'Military Ski Patrol', 'Alpinism', 'Tug-Of-War', 'Motorboating', 'Basque Pelota', 'Roque', 'Golf', 'Archery', 
+        '8': ['Art Competitions', 'Alpinism', 'Tug-Of-War', 'Motorboating', 'Basque Pelota', 'Roque', 'Golf', 'Archery', 
                                'Shooting', 'Equestrianism']
     }
     df1 = df[df['Sport'].isin(dict_for_sports['1'])]
