@@ -1,7 +1,4 @@
 <script lang="ts">
-	import { splitString } from '@unovis/ts';
-
-	//import { LOGNAME } from '$env/static/private';
     
     const { data } = $props();
 
