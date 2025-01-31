@@ -13,6 +13,40 @@
 	
     let sports_types = new Map([["1", "Team"], ["2", "Racquet"], ["3", "Combat"], ["4", "Water"], ["5", "Winter"], ["6", "Track/Field"], 
             ["7", "Gymnast./Acrob."], ["8", "Remaining"]]);
+    let sports_types_long = new Map([["1", "Team Sports"], ["2", "Racquet Sports"], ["3", "Combat Sports"], ["4", "Water Sports"], ["5", "Winter Sports"], 
+            ["6", "Track and Field Sports"], ["7", "Gymnastics and Acrobatic Sports"], ["8", "Remaining Sports"]]);
+    let sports_events = new Map([
+        ['1', ['Football', 'Handball', 'Hockey', 'Ice Hockey', 'Rugby Sevens', 'Water Polo', 'Lacrosse', 'Basketball', 'Volleyball', 'Rugby', 
+                               'Softball', 'Baseball', 'Cricket', 'Polo', 'Beach Volleyball', 'Polo']],
+        ['2', ['Tennis', 'Badminton', 'Table Tennis', 'Croquet', 'Jeu De Paume', 'Racquets']],
+        ['3', ['Judo', 'Taekwondo', 'Boxing', 'Wrestling', 'Fencing']],
+        ['4', ['Sailing', 'Swimming', 'Diving', 'Synchronized Swimming', 'Canoeing', 'Rowing']],
+        ['5', ['Biathlon', 'Ski Jumping', 'Snowboarding', 'Alpine Skiing', 'Freestyle Skiing', 'Cross Country Skiing', 'Bobsleigh', 'Skeleton', 
+                               'Luge', 'Nordic Combined', 'Curling', 'Military Ski Patrol']],
+        ['6', ['Athletics', 'Weightlifting', 'Triathlon', 'Cycling', 'Speed Skating', 'Short Track Speed Skating', 'Modern Pentathlon']],
+        ['7', ['Gymnastics', 'Rhythmic Gymnastics', 'Trampolining', 'Figure Skating']],
+        ['8', ['Art Competitions', 'Alpinism', 'Tug-Of-War', 'Motorboating', 'Basque Pelota', 'Roque', 'Golf', 'Archery', 
+                               'Shooting', 'Equestrianism']]
+    ]);
+
+    function get_events_as_li (a:string){
+        let list = sports_events.get(a) ?? [];
+        let out = ""
+        list.forEach(elem => out+= ("<li>" + elem + "</li>"));
+        
+        return out;
+    }
+
+    const checked_groups = $state({
+        group1: true,
+        group2: true,
+        group3: true,
+        group4: true,
+        group5: true,
+        group6: true,
+        group7: true,
+        group8: true
+    })
 
     let year_slider_min = $state(0);
     let year_slider_max = $state(1);
@@ -22,14 +56,32 @@
     let checked_women = $state(true)
     let checked_summer = $state(true)
     let checked_winter = $state(true)
-    let checked_group1 = $state(true)
-    let checked_group2 = $state(true)
-    let checked_group3 = $state(true)
-    let checked_group4 = $state(true)
-    let checked_group5 = $state(true)
-    let checked_group6 = $state(true)
-    let checked_group7 = $state(true)
-    let checked_group8 = $state(true)
+    //let checked_group1 = $state(true)
+    //let checked_group2 = $state(true)
+    //let checked_group3 = $state(true)
+    let checked_group1 = $derived(checked_groups.group1)
+    let checked_group2 = $derived(checked_groups.group2)
+    let checked_group3 = $derived(checked_groups.group3)
+    let checked_group4 = $derived(checked_groups.group1)
+    let checked_group5 = $derived(checked_groups.group2)
+    let checked_group6 = $derived(checked_groups.group3)
+    let checked_group7 = $derived(checked_groups.group1)
+    let checked_group8 = $derived(checked_groups.group2)
+
+
+
+    function get_check_marks (i:number){
+        switch (i){
+            case 1: return checked_group1;
+            case 2: return checked_group2;
+            case 3: return checked_group3;
+            case 4: return checked_group4;
+            case 5: return checked_group5;
+            case 6: return checked_group6;
+            case 7: return checked_group7;
+            case 8: return checked_group8;
+        }
+    }
 
     let filetered_data = $derived(update_after_selection(data.olymCSV, [year_min, year_max, checked_women, checked_men,
         checked_group1, checked_group2, checked_group3, checked_group4, checked_group5, checked_group6, checked_group7, 
@@ -497,17 +549,21 @@
     //let bot_color = ["red", "blue", "green", "orange", "grey", "yellow", "pink", "brown"]
     //let bot_color = ["#FFCCFF", "#A3D9FF", "#B2F0B1", "#FFEB99", "#FFD1E6", "#FFBC99", "#E2A9FF", "#FFB3B3"]
     let bot_color = [
-    "#FF8080", // Slightly darker Light Red
-    "#FF99CC", // Slightly darker Light Pink
-    "#80BFFF", // Slightly darker Light Blue
-    "#99E699", // Slightly darker Light Green
-    "#FFD966", // Slightly darker Light Yellow
-    "#FFB3D9", // Slightly darker Pastel Lavender
-    "#FF9966", // Slightly darker Light Coral
-    "#D18CFF"  // Slightly darker Light Violet
+        //"#008ab3",//men
+        "#c38549",
+        "#00b1ec",
+        "#bfae5a",
+        "#8d6bb1",//5
+        "#d7ffba",//6
+        "#efa3e8",//8
+        "#5dc593",//9
+        "#80802d",//11
+        //"#fb8f8b",//women
+        "#8ecbff",//13
+        "#ffc4b5"//15
     ]
-    let men_color = "#6A8BBE";
-    let women_color = "#E07B7B";
+    let men_color = "#008ab3";
+    let women_color = "#fb8f8b";
     let comp_color = "#7B9FD1";
     let grey_color = "grey";
     //console.log(filetered_data.get("bottom").get(1+""))
@@ -561,86 +617,21 @@
                         only works for the podiums
                     </div>
                 </div>
-                <div class="text_l uistack tooltipped" style="">
-                    <input type="checkbox" id="group1" bind:checked={checked_group1} /> 
-                    <label for="group1"> Team Sports </label>
-                    <div class="tooltip tooltip-right">
-                        <ul class="list_tool">
-                            <li>Football</li><li>Handball</li><li>Hockey</li><li>Ice Hockey</li><li>Rugby Sevens</li>
-                            <li>Water Polo</li><li>Lacrosse</li><li>Basketball</li><li>Volleyball</li><li>Rugby</li>
-                            <li>Softball</li><li>Baseball</li><li>Cricket</li><li>Polo</li><li>Beach Volleyball</li>
-                            <li>Polo</li>
-                        </ul>
+                {#each [1,2,3,4,5,6,7,8] as id}
+                    <div class="text_l uistack tooltipped" style="">
+                        <input type="checkbox" id="group{id}" 
+                            bind:checked={checked_groups["group"+id]} /> 
+                        <label for="group{id}"> {sports_types_long.get(id+"")} </label>
+                        <div class="tooltip tooltip-right">
+                            <ul class="list_tool">
+                                {#each sports_events.get(id+"") as elem}
+                                <li>{elem} </li>
+                                {/each}
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                <div class="text_l uistack tooltipped" style="">
-                    <input type="checkbox" id="group2" bind:checked={checked_group2} /> 
-                    <label for="group2">Racquet Sports 
-                    </label>
-                    <div class="tooltip tooltip-right">
-                        <ul class="list_tool">
-                            <li>Tennis</li><li>Badminton</li><li>Table Tennis</li><li>Croquet</li><li>Jeu De Paume</li>
-                            <li>Racquets</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="text_l uistack tooltipped" style=""><input type="checkbox" id="group3" bind:checked={checked_group3} /> 
-                    <label for="group3">Combat Sports 
-                    </label>
-                    <div class="tooltip tooltip-right">
-                        <ul class="list_tool">
-                            <li>Judo</li><li>Taekwondo</li><li>Boxing</li><li>Wrestling</li><li>Fencing</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="text_l uistack tooltipped" style=""><input type="checkbox" id="group4" bind:checked={checked_group4} /> 
-                    <label for="group4">Water Sports </label>
-                    <div class="tooltip tooltip-right">
-                        <ul class="list_tool">
-                            <li>Sailing</li><li>Swimming</li><li>Diving</li><li>Synchronized Swimming</li><li>Canoeing</li>
-                            <li>Rowing</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="text_l uistack tooltipped" style=""><input type="checkbox" id="group5" bind:checked={checked_group5} /> 
-                    <label for="group5">Winter Sports </label>
-                    <div class="tooltip tooltip-right">
-                        <ul class="list_tool">
-                            <li>Biathlon</li><li>Ski Jumping</li><li>Snowboarding</li><li>Alpine Skiing</li><li>Freestyle Skiing</li>
-                            <li>Cross Country Skiing</li><li>Bobsleigh</li><li>Skeleton</li><li>Luge</li><li>Nordic Combined</li>
-                            <li>Curling</li><li>Military Ski Patrol</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="text_l uistack tooltipped" style="">
-                    <input type="checkbox" id="group6" bind:checked={checked_group6} /> 
-                    <label for="group6">Track and Field Sports</label>
-                    <div class="tooltip tooltip-right">
-                        <ul class="list_tool">
-                            <li>Athletics</li><li>Weightlifting</li><li>Triathlon</li><li>Cycling</li><li>Speed Skating</li>
-                            <li>Short Track Speed Skating</li><li>Modern Pentathlon</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="text_l uistack tooltipped" style=""><input type="checkbox" id="group7" bind:checked={checked_group7} /> 
-                    <label for="group7">Gymnastics and Acrobatic Sports</label>  
-                    <div class="tooltip tooltip-right">
-                        <ul class="list_tool">
-                            <li>Gymnastics</li><li>Rhythmic Gymnastics</li><li>Trampolining</li><li>Figure Skating</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="text_l uistack tooltipped" style=""><input type="checkbox" id="group8" bind:checked={checked_group8} /> 
-                    <label for="group8">Remaining Sports </label>
-                    <div class="tooltip tooltip-right">
-                        <ul class="list_tool">
-                            <li>Art Competitions</li><li>Alpinism</li><li>Tug-Of-War</li><li>Motorboating</li>
-                            <li>Basque Pelota</li><li>Roque</li><li>Golf</li><li>Archery</li><li>Shooting</li>
-                            <li>Equestrianism</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+                {/each}
+            </div> 
         </div>
         <div  class="text_l sidebar" style="border: none">
             <div class="left_stats">
