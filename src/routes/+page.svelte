@@ -551,7 +551,7 @@
         "#00b1ec",
         "#bfae5a",
         "#8d6bb1",//5
-        "#d7ffba",//6
+        "#a7cf8a",//6
         "#efa3e8",//8
         "#5dc593",//9
         "#80802d",//11
@@ -582,12 +582,21 @@
     let top_l_map_list = ["best_abs", "best_rel", "worst_abs", "worst_rel"];
     let top_l_pod_list = ["best_podium.png", "worst_podium.png"];
     let top_l_x = [43, 12, 75];
-    let top_l_y = [[85, 71, 65], [35, 51, 59]];
+    let top_l_y = [[84, 67, 59], [37, 54, 62]];
 
     let top_r_cat = [["women", "men"], ["old", "young"]]
     let top_r_name = [["women", "men"], ["old athletes", "young athletes"]]
     let medals = ["gold", "silver", "bronze"]
     
+    function get_top_l_flag_y (row:number, col:number){
+        let diff = 12;
+        if (row == 1){
+            return top_l_y[row][col] - diff + 1;
+        }
+        else {
+            return top_l_y[row][col] + diff + 3;
+        }
+    }
     
 </script>
 
@@ -598,7 +607,7 @@
     <text style="font-size: 30px;font-weight: bold;">Overview over the Olympic History</text>
     <text style="margin-left: 20px;">Source: 
         <a href="https://www.kaggle.com/datasets/bhanupratapbiswas/olympic-data">Kaggle</a></text>
-    <text style="margin-left: 20px;"><a href="./oldDraft">Old Page</a></text>
+    <!-- <text style="margin-left: 20px;"><a href="./oldDraft">Old Page</a></text> -->
 </div>
 
 
@@ -695,13 +704,17 @@
                         <div style="width: 99%; height: 80%; position: absolute;">
                             <img class="podium{row}" src="images/{top_l_pod_list[row-1]}" style="width: 95%;" alt="medal" />
                             {#each [0,1,2] as place}
-                            <div class="uistack tooltipped" style="position: absolute; left: {top_l_x[place]}%; bottom: {top_l_y[row-1][place]}%;"> 
+                            <div class="uistack tooltipped" style="position: absolute; left: {top_l_x[place]}%; bottom: {top_l_y[row-1][place]}%; width: fit-content; font-family: monospace;"> 
                                 {filetered_data.get("top_l").get(top_l_map_list[((row-1)*2)+col-1])[place].nat ?? 0}
-                                <div class="tooltip tooltip-right" style="top: 1em; left: 1em; width:fit-content">
-                                    <img style="width: 2em; height: 1em;" src="images/flags/{(filetered_data.get("top_l").get(top_l_map_list[((row-1)*2)+col-1])[place].coun).split("-")[0]}.png" alt=""/>
+                                
+                                <div class="tooltip tooltip-right" style="top: 1em; left: 1em; width:fit-content;font-family: sans-serif;">
+                                    <!-- <img style="width: 2em; height: 1em;" src="images/flags/{(filetered_data.get("top_l").get(top_l_map_list[((row-1)*2)+col-1])[place].coun).split("-")[0]}.png" alt=""/> -->
                                     {filetered_data.get("top_l").get(top_l_map_list[((row-1)*2)+col-1])[place].coun.split("-")[0] ?? 0}
                                 </div>
                             </div>
+                            <img style="width: 2em; height: 1em; position: absolute;
+                            left: {top_l_x[place]-0.5}%; bottom: {get_top_l_flag_y(row-1, place)}%;" 
+                            src="images/flags/{(filetered_data.get("top_l").get(top_l_map_list[((row-1)*2)+col-1])[place].coun).split("-")[0]}.png" alt=""/>
                             {/each}
                         </div>
                     </div>
@@ -759,10 +772,10 @@
             Most Medals per Participant:
         </div>
         {#each [0,1] as row}
-            <div style="height: 47%; width: 100%; padding: 3px; font-size: 17px; font-weight: bold; ">
+            <div style="height: 47%; width: 100%; font-size: 17px; font-weight: bold; ">
                 
                 {#each [0,1] as col}
-                    <div class="top_pic" style="padding: 5px">
+                    <div class="top_pic" style="padding: 0px">
                         <div class="top_m_sports" style="height: 1.5em;">
                             For {top_r_name[row][col]}:
                         </div>
@@ -889,7 +902,6 @@
         height: 90%; 
         margin: 5px;
         padding: 3px;
-        border: 1px gray solid;
         border-radius: 13px;
         font-size: 16px; 
         font-weight: normal;
@@ -940,10 +952,10 @@
     .grid-container {
         display: grid;
         grid-template-areas:
-            'left topL topL topM topM topR topR'
-            'left topL topL topM topM topR topR'
             'left botL botL botL botR botR botR'
-            'left botL botL botL botR botR botR';
+            'left botL botL botL botR botR botR'
+            'left topM topM topL topL topR topR'
+            'left topM topM topL topL topR topR';
         gap: 14px;
         /*background-color: #77797a;*/
         padding: 2px;
@@ -1042,6 +1054,8 @@
         font-size: 20px;
         text-align: center;
         font-weight: bold;
+        padding-top: 5px;
+        margin: 0.7%;
     }
     .text_l {
         font-size: 18px;
