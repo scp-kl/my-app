@@ -585,7 +585,7 @@
     let top_l_y = [[84, 67, 59], [37, 54, 62]];
 
     let top_r_cat = [["women", "men"], ["old", "young"]]
-    let top_r_name = [["women", "men"], ["old athletes", "young athletes"]]
+    let top_r_name = [["Women", "Men"], ["Old Athletes", "Young Athletes"]]
     let medals = ["gold", "silver", "bronze"]
     
     function get_top_l_flag_y (row:number, col:number){
@@ -613,31 +613,34 @@
 
 <div class="grid-container" style="height:90vh; width: 99vw;">
     <div class="item1" style=""><!-- left -->
-        <div class="sidebar">
-            <div class="text_l" style="margin: 3px;">
-                <div class="uistack tooltipped">
-                    <div style="text-align: center; margin-bottom: 0.5sem;">
-                        Select the Sports Groups: (*)
-                    </div>
-                    <div class="tooltip tooltip-right">
-                        only works for the podiums
-                    </div>
+        
+        <div class="sidebar" style="height:10vh;">
+            <div class="text_l" style="margin: 3px; text-align: center;">
+                Time Span<!-- Select the year range: -->
+                <div style="margin: 5px 10px; margin-bottom: 3px;">
+                    <DoubleRangeSlider bind:start={year_slider_min} bind:end={year_slider_max}/>
                 </div>
-                {#each [1,2,3,4,5,6,7,8] as id}
-                    <div class="text_l uistack tooltipped" style="">
-                        <input type="checkbox" id="group{id}" 
-                            bind:checked={checked_groups["group"+id]} /> 
-                        <label for="group{id}"> {sports_types_long.get(id+"")} </label>
-                        <div class="tooltip tooltip-right">
-                            <ul class="list_tool">
-                                {#each sports_events.get(id+"") as elem}
-                                <li>{elem} </li>
-                                {/each}
-                            </ul>
-                        </div>
-                    </div>
-                {/each}
-            </div> 
+                <div class="labels">
+                    <span class="label text_l">{nice(year_min)}</span>
+                    <span class="label text_l">{nice(year_max)}</span>
+                </div>
+                <div class="slider">
+	            </div>
+            </div>
+        </div>
+        <div class="sidebar" style=" text-align: center;">
+            <div class="text_l" style="margin: 3px;">
+                Gender<br>
+                <span style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_men} /> M </span>
+                <span><input type="checkbox" bind:checked={checked_women} /> F </span>
+            </div>
+        </div>
+        <div class="text_l sidebar" style=" text-align: center;">
+            <div style="margin: 3px;">
+                Season<br>
+                <span><input type="checkbox" bind:checked={checked_summer} /> Summer </span>
+                <span><input type="checkbox" bind:checked={checked_winter} /> Winter </span>
+            </div>
         </div>
         <div  class="text_l sidebar" style="border: none">
             <div class="left_stats">
@@ -653,33 +656,40 @@
                 {filetered_data.get("games").size} / 51
             </div>
         </div>
-        <div class="sidebar" style="height:10vh;">
-            <div class="text_l" style="margin: 3px; text-align: center;">
-                Select the year range:
-                <div style="margin: 5px 10px;">
-                    <DoubleRangeSlider bind:start={year_slider_min} bind:end={year_slider_max}/>
-                </div>
-                <div class="labels">
-                    <span class="label text_l">{nice(year_min)}</span>
-                    <span class="label text_l">{nice(year_max)}</span>
-                </div>
-                <div class="slider">
-	            </div>
-            </div>
-        </div>
-        <div class="sidebar" style=" text-align: center;">
+        <div class="sidebar"><!-- sports groups -->
             <div class="text_l" style="margin: 3px;">
-                Select the Gender:<br>
-                <span style="margin-right: 2em;"><input type="checkbox" bind:checked={checked_men} /> M </span>
-                <span><input type="checkbox" bind:checked={checked_women} /> F </span>
-            </div>
-        </div>
-        <div class="text_l sidebar" style=" text-align: center;">
-            <div style="margin: 3px;">
-                Select the Season:<br>
-                <span><input type="checkbox" bind:checked={checked_summer} /> Summer </span>
-                <span><input type="checkbox" bind:checked={checked_winter} /> Winter </span>
-            </div>
+                <div style="text-align: center; margin-bottom: 0.05em; width: 100%">
+                    Sports Categories
+                </div>
+                <div style="text-align: center; font-size: 12px; font-weight: normal; margin-bottom: 0.5em; width: 100%">
+                    only works for the podiums
+                </div>
+                <!-- <div class="uistack tooltipped">
+                    <div style="text-align: center; margin-bottom: 0.2em; width: 90%">
+                        Sports Categories (*)
+                    </div>
+                    <div style="text-align: left; font-size: 12px; font-weight: normal; margin-bottom: 0.5em; width: 95%">
+                        only works for the podiums
+                    </div>
+                    <div class="tooltip tooltip-right">
+                        only works for the podiums
+                    </div>
+                </div> -->
+                {#each [1,2,3,4,5,6,7,8] as id}
+                    <div class="text_l uistack tooltipped" style="">
+                        <input type="checkbox" id="group{id}" 
+                            bind:checked={checked_groups["group"+id]} /> 
+                        <label for="group{id}"> {sports_types_long.get(id+"")} </label>
+                        <div class="tooltip tooltip-top">
+                            <ul class="list_tool">
+                                {#each sports_events.get(id+"") as elem}
+                                <li>{elem} </li>
+                                {/each}
+                            </ul>
+                        </div>
+                    </div>
+                {/each}
+            </div> 
         </div>
     </div><!-- end left -->
     <div class="item2"><!-- topL -->
@@ -707,7 +717,7 @@
                             <div class="uistack tooltipped" style="position: absolute; left: {top_l_x[place]}%; bottom: {top_l_y[row-1][place]}%; width: fit-content; font-family: monospace;"> 
                                 {filetered_data.get("top_l").get(top_l_map_list[((row-1)*2)+col-1])[place].nat ?? 0}
                                 
-                                <div class="tooltip tooltip-right" style="top: 1em; left: 1em; width:fit-content;font-family: sans-serif;">
+                                <div class="tooltip tooltip-bot" style="top: 1em; left: 1em; width:fit-content;font-family: sans-serif;">
                                     <!-- <img style="width: 2em; height: 1em;" src="images/flags/{(filetered_data.get("top_l").get(top_l_map_list[((row-1)*2)+col-1])[place].coun).split("-")[0]}.png" alt=""/> -->
                                     {filetered_data.get("top_l").get(top_l_map_list[((row-1)*2)+col-1])[place].coun.split("-")[0] ?? 0}
                                 </div>
@@ -777,7 +787,7 @@
                 {#each [0,1] as col}
                     <div class="top_pic" style="padding: 0px">
                         <div class="top_m_sports" style="height: 1.5em;">
-                            For {top_r_name[row][col]}:
+                            {top_r_name[row][col]}
                         </div>
                         <div style="width: 99%; height: 80%; position: absolute;">
                             {#each [0,1,2] as place}
@@ -954,8 +964,8 @@
         grid-template-areas:
             'left botL botL botL botR botR botR'
             'left botL botL botL botR botR botR'
-            'left topM topM topL topL topR topR'
-            'left topM topM topL topL topR topR';
+            'left topL topL topM topM topR topR'
+            'left topL topL topM topM topR topR';
         gap: 14px;
         /*background-color: #77797a;*/
         padding: 2px;
@@ -1084,24 +1094,36 @@
     .tooltipped .tooltip{
         position: absolute;
         visibility: hidden;
+        overflow: visible;
         opacity: 0;
         z-index: 1;
         background-color: #00000038;
         color: white;
-        border-radius: 7px;
+        border-radius: 17px;
         padding: 7px;
         backdrop-filter: blur(10px);
         transition: all 0.25s;
         font-weight: 300;
     }
-    .tooltipped .tooltip.tooltip-right{
+    .tooltipped .tooltip.tooltip-bot{
         /*top: 0;
         left: 100%;
         min-height: 100%;*/
+        position: inherit;
         top: 100%;
         left: 30%;
         width: 70%;
         border-top-left-radius: 0;
+    }
+    .tooltipped .tooltip.tooltip-top{
+        /*top: 0;
+        left: 100%;
+        min-height: 100%;*/
+        position: auto;
+        bottom: 100%;
+        left: 30%;
+        width: 70%;
+        border-bottom-left-radius: 0;
     }
     .tooltipped:hover .tooltip{
         opacity: 1;
