@@ -614,18 +614,17 @@
 <div class="grid-container" style="height:90vh; width: 99vw;">
     <div class="item1" style=""><!-- left -->
         
-        <div class="sidebar" style="height:10vh;">
+        <div class="sidebar" style="">
             <div class="text_l" style="margin: 3px; text-align: center;">
                 Time Span<!-- Select the year range: -->
                 <div style="margin: 5px 10px; margin-bottom: 3px;">
                     <DoubleRangeSlider bind:start={year_slider_min} bind:end={year_slider_max}/>
                 </div>
-                <div class="labels">
+                <div class="labels" style="margin-bottom: 3px;">
                     <span class="label text_l">{nice(year_min)}</span>
                     <span class="label text_l">{nice(year_max)}</span>
                 </div>
-                <div class="slider">
-	            </div>
+                
             </div>
         </div>
         <div class="sidebar" style=" text-align: center;">
