@@ -604,7 +604,7 @@
 
 
 <div style="margin-bottom: 10px;">
-    <text style="font-size: 30px;font-weight: bold;">Overview over the Olympic History</text>
+    <text style="font-size: 30px;font-weight: bold;">Olympic History</text>
     <text style="margin-left: 20px;">Source: 
         <a href="https://www.kaggle.com/datasets/bhanupratapbiswas/olympic-data">Kaggle</a></text>
     <!-- <text style="margin-left: 20px;"><a href="./oldDraft">Old Page</a></text> -->
@@ -661,7 +661,7 @@
                     Sports Categories
                 </div>
                 <div style="text-align: center; font-size: 12px; font-weight: normal; margin-bottom: 0.5em; width: 100%">
-                    only works for the podiums
+                    for podiums only
                 </div>
                 <!-- <div class="uistack tooltipped">
                     <div style="text-align: center; margin-bottom: 0.2em; width: 90%">
@@ -696,18 +696,18 @@
             <div style="height: 49%; width: 100%; padding: 3px; font-size: 17px; font-weight: bold; ">
                 <div class="heading" style="">
                     {#if row == 1}
-                    Nations winning the most medals:
+                    Nations winning the most medals
                     {:else}
-                    Nations winning the least medals (but min 1): 
+                    Nations winning the least medals
                     {/if}
                 </div>
                 {#each [1,2] as col}
                     <div class="top_pic" style="padding: 5px">
                         <div style="height: 3em;">
                             {#if col == 1}
-                            Total:
+                            Total
                             {:else}
-                            Per Participant:
+                            Per Participant
                             {/if}
                         </div>
                         <div style="width: 99%; height: 80%; position: absolute;">
@@ -733,7 +733,7 @@
     </div><!-- topL -->
     <div class="item3"><!-- topM -->
         <div class="top_m_sports heading" style="margin: 0.7%;">
-            Comparison of athletes dimensions:
+            Comparison of athletes dimensions
         </div>
         {#each [1,2,3] as row}
         <div class="top_m_outer" style="">
@@ -778,7 +778,7 @@
     </div><!-- end topM -->
     <div class="item4"><!-- topR -->
         <div class="heading" style="">
-            Most Medals per Participant:
+            Most Medals per Participant
         </div>
         {#each [0,1] as row}
             <div style="height: 47%; width: 100%; font-size: 17px; font-weight: bold; ">
@@ -840,7 +840,7 @@
     </div><!-- end botL -->
     <div class="item6"><!-- botR -->
         <div class="heading">
-            Attendancies per sports type (averaged per game)
+            Attendancies per sports category (averaged per game)
         </div>
         <svg class="bottpic" style="">
             <line class="axis" id="x" x1="{bottom_scale_x(-0.5)}%" y1="{bottom_scale_y(0)}%" x2="{bottom_scale_x(bot_num_x_ticks+0.5)}%" y2="{bottom_scale_y(0)}%" />
